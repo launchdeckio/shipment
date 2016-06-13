@@ -4,7 +4,8 @@
   "description": "Provides basic functionality for exposing standardized cli & js APIs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pretest": "jshint lib",
+    "test": "mocha --recursive -R spec"
   },
   "author": "",
   "license": "MIT",
@@ -16,5 +17,11 @@
     "numeral": "^1.5.3",
     "pretty-error": "^2.0.0",
     "sprintf-js": "^1.0.3"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "coveralls": "^2.11.9",
+    "jshint": "^2.9.2",
+    "mocha": "^2.5.3"
   }
 }
