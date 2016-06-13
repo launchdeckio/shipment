@@ -16,7 +16,9 @@
     "node-notifier": "^4.6.0",
     "numeral": "^1.5.3",
     "pretty-error": "^2.0.0",
-    "sprintf-js": "^1.0.3"
+    "sprintf-js": "^1.0.3",
+    "update-notifier": "^1.0.0",
+    "yargs": "^4.7.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",

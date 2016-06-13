@@ -5,5 +5,7 @@ module.exports = {
     Context:       require('./lib/Context'),
     GracefulError: require('./lib/GracefulError'),
     Option:        require('./lib/Option'),
-    Reporter:      require('./lib/Reporter')
+    Reporter:      require('./lib/Reporter'),
+
+    cli: require('./lib/cli')
 };
