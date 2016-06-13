@@ -3,11 +3,24 @@
   "version": "0.2.0",
   "description": "Provides basic functionality for exposing standardized cli & js APIs",
   "main": "index.js",
+  "engines": {
+    "node": ">=4"
+  },
   "scripts": {
     "pretest": "jshint lib",
     "test": "mocha --recursive -R spec"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/launchdeckio/shipment.git"
+  },
+  "keywords": [
+    "cli",
+    "api",
+    "subcommands",
+    "subcommand"
+  ],
+  "author": "JM Versteeg",
   "license": "MIT",
   "dependencies": {
     "chalk": "^1.1.3",
