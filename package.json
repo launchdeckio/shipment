@@ -1,6 +1,6 @@
 {
   "name": "shipment",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Provides basic functionality for exposing standardized cli & js APIs",
   "main": "index.js",
   "engines": {
