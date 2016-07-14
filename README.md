@@ -1,6 +1,6 @@
 # shipment
 
-> Provides basic functionality for exposing standardized cli & js APIs
+> Provides basic functionality for exposing standardized CLI & APIs
 
 [![Build Status][travis-image]][travis-url]
 [![Code Quality][codeclimate-image]][codeclimate-url]
