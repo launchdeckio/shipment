@@ -55,7 +55,7 @@ describe('Context', () => {
 
             return Promise.delay(20).then(() => {
 
-                context.getUptime().should.be.within(18, 22);
+                context.getUptime().should.be.within(18, 30);
             });
         });
     });
