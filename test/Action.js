@@ -266,7 +266,7 @@ describe('Action', () => {
         it('should register the commands to the given instance of yargs', () => {
 
             let yargs = require('yargs');
-            (subAction).register(yargs);
+            (subAction).register(yargs, 0);
             subActionSpy.should.not.have.been.called;
             yargs.parse('some-sub-action');
             return Promise.delay(20).then(() => {
