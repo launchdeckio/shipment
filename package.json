@@ -2,7 +2,7 @@
   "name": "shipment",
   "version": "2.0.1",
   "description": "Provides basic functionality for exposing standardized cli & js APIs",
-  "main": "index.js",
+  "main": "lib/Shipment.js",
   "engines": {
     "node": ">=4"
   },
