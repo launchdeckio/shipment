@@ -146,13 +146,13 @@ describe('Action', () => {
 
         it('should return a function that invokes beforeRun, run, afterRun in that order and with the context and options', () => {
 
-            let fns = ['beforeRun', 'run', 'afterRun'];
-            _.forEach(fns, fn => sinon.stub(action, fn, () => Promise.delay(10)));
+            _.forEach(['beforeRun', 'afterRun'], fn => sinon.spy(action, fn));
+            sinon.stub(action, 'run', () => Promise.delay(10));
             sinon.stub(action, 'parseArgs', args => {
                 return {foofoo: args.foo};
             });
             return action.prepare(mockContext, {foo: 'barbar'})().then(() => {
-                _.forEach(fns, fn => {
+                _.forEach(['beforeRun', 'run', 'afterRun'], fn => {
                     action[fn].should.have.been.calledOnce;
                     action[fn].should.have.been.calledWith(mockContext, sinon.match({foofoo: 'barbar'}));
                 });
