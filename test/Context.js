@@ -53,7 +53,7 @@ describe('Context', () => {
 
             context = new Context;
 
-            Promise.delay(20).then(() => {
+            return Promise.delay(20).then(() => {
 
                 context.getUptime().should.be.within(18, 22);
             });
