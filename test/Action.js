@@ -14,14 +14,17 @@ const Context = require('./../lib/Context');
 describe('Action', () => {
 
     let action,
-        SubAction, subAction,
+        SubAction, subAction, subActionSpy,
         customContextSpy, MockContext, mockContext,
         CustomContextSubAction, customContextSubAction;
 
     beforeEach(() => {
         action                         = new Action();
+        subActionSpy                   = sinon.spy();
         SubAction                      = class SomeSubAction extends Action {
-
+            run(context, options) {
+                subActionSpy(...arguments);
+            }
         };
         subAction                      = new SubAction();
         customContextSpy               = sinon.spy();
@@ -262,18 +265,14 @@ describe('Action', () => {
 
         it('should register the commands to the given instance of yargs', () => {
 
-            let yargs = {
-                command: sinon.spy()
-            };
-
-            SubAction.description = 'some description';
-            (new SubAction()).register(yargs);
-            yargs.command.should.have.been.calledWith(
-                'some-sub-action',
-                'some description',
-                sinon.match.func,
-                sinon.match.func
-            );
+            let yargs = require('yargs');
+            (subAction).register(yargs);
+            subActionSpy.should.not.have.been.called;
+            yargs.parse('some-sub-action');
+            return Promise.delay(20).then(() => {
+                // Because the actions are ran via Promises that cannot be intercepted when calling yargs.parse
+                subActionSpy.should.have.been.calledOnce;
+            });
         })
     });
 });
