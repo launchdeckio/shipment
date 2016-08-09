@@ -26,8 +26,8 @@ describe('Action', () => {
         subAction                      = new SubAction();
         customContextSpy               = sinon.spy();
         MockContext                    = class {
-            constructor(options) {
-                customContextSpy(options);
+            constructor() {
+                customContextSpy(...arguments);
             }
 
             getUptime() {
