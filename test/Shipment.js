@@ -45,6 +45,22 @@ describe('Shipment', () => {
 
     describe('cli', () => {
 
+        let CustomShipment, customShipment, mockPkg, updateNotifierSpy;
+
+        beforeEach(() => {
+
+            updateNotifierSpy             = sinon.spy();
+            mockPkg                       = {version: '1.4'};
+            CustomShipment                = class extends Shipment {
+            };
+            CustomShipment.updateNotifier = options => {
+                return {
+                    notify: () => updateNotifierSpy(options.pkg)
+                };
+            };
+            customShipment                = new CustomShipment([], {pkg: mockPkg});
+        });
+
         it('should execute the requested action', () => {
 
             actionSpy.should.not.have.been.called;
@@ -60,6 +76,19 @@ describe('Shipment', () => {
                 action.should.be.an.instanceOf(Action);
                 action.getName().should.equal('some-sub-action');
             });
+        });
+
+        it('should invoke updateNotifier', () => {
+
+            customShipment.cli(['']);
+            updateNotifierSpy.should.have.been.calledWith(mockPkg);
+        });
+
+        it('...unless noUpdateNotifier is given', () => {
+
+            let customShipment = new CustomShipment([], {pkg: mockPkg, noUpdateNotifier: true});
+            customShipment.cli(['']);
+            updateNotifierSpy.should.not.have.been.called;
         });
 
         describe('subcommand', () => {
