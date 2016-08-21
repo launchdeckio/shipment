@@ -12,7 +12,7 @@ describe('Option', () => {
     let mockOption;
 
     beforeEach(() => {
-        mockOption = new Option(yargs => {
+        mockOption = new Option('mockOption', yargs => {
             yargs.transform();
             return yargs;
         }, (options, argv) => options.transform(argv));

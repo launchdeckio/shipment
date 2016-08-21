@@ -1,6 +1,7 @@
 'use strict';
 
 const _               = require('lodash');
+const path            = require('path');
 const sinon           = require('sinon');
 const sinonAsPromised = require('sinon-as-promised');
 const sprintf         = require('sprintf-js').sprintf;
@@ -13,17 +14,21 @@ const Context = require('./../lib/Context');
 
 describe('Action', () => {
 
+    let cwd = process.cwd();
+
     let action,
-        SubAction, subAction, subActionSpy,
+        SubAction, subAction, subActionSpy, subActionCwdSpy,
         customContextSpy, MockContext, mockContext,
         CustomContextSubAction, customContextSubAction;
 
     beforeEach(() => {
         action                         = new Action();
         subActionSpy                   = sinon.spy();
+        subActionCwdSpy                = sinon.spy();
         SubAction                      = class SomeSubAction extends Action {
             run(context, options) {
                 subActionSpy(...arguments);
+                subActionCwdSpy(process.cwd());
             }
         };
         subAction                      = new SubAction();
@@ -39,12 +44,16 @@ describe('Action', () => {
         };
         mockContext                    = new MockContext({});
         CustomContextSubAction         = class extends SubAction {
-            parseContextArgs() {
-                return {foo: 'bar'};
+            parseContextArgs(args, cli) {
+                return {foo: 'bar', cli};
             }
         };
         CustomContextSubAction.Context = MockContext;
         customContextSubAction         = new CustomContextSubAction();
+    });
+
+    afterEach(() => {
+        process.chdir(cwd);
     });
 
     describe('run', () => {
@@ -86,8 +95,8 @@ describe('Action', () => {
 
         it('should call the Context constructor with the return value of parseContextArgs', () => {
 
-            customContextSubAction.makeContext({});
-            customContextSpy.should.have.been.calledWith(sinon.match({foo: 'bar'}));
+            customContextSubAction.makeContext({}, true);
+            customContextSpy.should.have.been.calledWith(sinon.match({foo: 'bar', cli: true}));
         });
 
         _.each([true, false], cli => {
@@ -128,8 +137,18 @@ describe('Action', () => {
 
         it('should return an array', () => {
 
-            action.getAvailableOptions().should.be.an('array');
+            action.getAvailableOptions(true).should.be.an('array');
         });
+
+        it('should include the cwd option in API mode', () => {
+
+            _.some(action.getAvailableOptions(false), option => option.name == 'cwd').should.be.ok;
+        });
+
+        it('should not include the cwd option in CLI mode', () => {
+
+            _.some(action.getAvailableOptions(true), option => option.name == 'cwd').should.not.be.ok;
+        })
     });
 
     describe('getContextDefaults', () => {
@@ -223,6 +242,15 @@ describe('Action', () => {
             // let exec = sinon.stub().resolves();
             sinon.stub(action, 'prepare').returns(() => 'beepboop');
             return action.executeApi({}).should.equal('beepboop');
+        });
+
+        it('should change the working directory before running the command, if one is specified', () => {
+
+            let wd = path.dirname(process.cwd());
+            wd.should.not.equal(cwd);
+            return subAction.executeApi({some: 'arg', cwd: wd}).then(() => {
+                subActionCwdSpy.should.have.been.calledWith(wd);
+            });
         });
     });
 
