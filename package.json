@@ -28,8 +28,10 @@
     "lodash": "^4.15.0",
     "node-notifier": "^4.6.1",
     "numeral": "^1.5.3",
+    "pino": "^2.9.0",
     "pretty-error": "^2.0.0",
     "sprintf-js": "^1.0.3",
+    "uniqid": "^4.0.0",
     "update-notifier": "^1.0.2",
     "yargs": "^5.0.0"
   },

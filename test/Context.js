@@ -11,15 +11,24 @@ const Reporter = require('./../lib/Reporter');
 describe('Context', () => {
 
     let context,
-        CustomReporter, customReporterSpy,
+        CustomReporter, customReporterConstructorSpy, customReporterReportSpy,
         CustomReporterContext, customReporterContext;
 
     beforeEach(() => {
         context                        = new Context;
-        customReporterSpy              = sinon.spy();
+        customReporterConstructorSpy   = sinon.spy();
+        customReporterReportSpy        = sinon.spy();
         CustomReporter                 = class {
             constructor() {
-                customReporterSpy(...arguments);
+                customReporterConstructorSpy(...arguments);
+            }
+
+            report() {
+                customReporterReportSpy(...arguments);
+            }
+
+            clone() {
+                return new this.constructor();
             }
         };
         CustomReporterContext          = class extends Context {
@@ -43,7 +52,7 @@ describe('Context', () => {
         it('should invoke the Reporter constructor with itself as the argument', () => {
 
             customReporterContext.makeReporter();
-            customReporterSpy.should.have.been.calledWith(customReporterContext);
+            customReporterConstructorSpy.should.have.been.calledWith(customReporterContext);
         });
     });
 
@@ -55,8 +64,46 @@ describe('Context', () => {
 
             return Promise.delay(20).then(() => {
 
-                context.getUptime().should.be.within(18, 30);
+                context.getUptime().should.be.within(18, 30); // Yeah this is kinda tricky
             });
+        });
+    });
+
+    describe('report', () => {
+
+        it('should invoke the report method on the reporter and extend the data with the internal scope', () => {
+
+            context = new CustomReporterContext({}, {someScopeVar: 'beepboop'});
+            context.report('info', {someDataVar: 'beepbop'});
+            customReporterReportSpy.should.have.been.calledWithMatch('info', {
+                someScopeVar: 'beepboop',
+                someDataVar:  'beepbop'
+            });
+        });
+    });
+
+    describe('createSubContext', () => {
+
+        it('should create a new context of the same type based on the internal scope, extended with the given scope', () => {
+
+            let options       = {verbosity: 3};
+            let internalScope = {base: 'foo'};
+            let customContext = new CustomReporterContext(options, internalScope);
+
+            let subContext = customContext.createSubContext({ext: 'bar'});
+            internalScope.should.deep.equal({base: 'foo'}); //First, check if the initial scope was not modified (no side-effects)
+            subContext.should.be.an.instanceOf(CustomReporterContext);
+            subContext.options.should.deep.equal(options);
+            subContext.scope.should.deep.equal({ext: 'bar', base: 'foo'});
+        });
+    });
+
+    describe('withScope', () => {
+
+        it('should run some function with a subContext that includes the given scope', () => {
+
+            new Context({}, {base: 'foo'}).withScope({ext: 'bar'}, context => context.scope.base + context.scope.ext)
+                .should.equal('foobar');
         });
     });
 });

@@ -5,7 +5,7 @@ const Action   = require('./../lib/Action');
 
 require('./support/support');
 
-const testCli = require('./support/testcli');
+const testCli = require('./support/testCli');
 
 const sinon    = require('sinon');
 const Bluebird = require('bluebird');
