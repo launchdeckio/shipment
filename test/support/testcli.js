@@ -16,7 +16,7 @@ let testCli = spy => {
 
     spy = functionify(spy);
 
-    const SubAction         = class SomeSubAction extends Action {
+    const SomeSubAction     = class SomeSubAction extends Action {
         run(context, options) {
             spy(this);
             console.log('run some action');
@@ -39,11 +39,23 @@ let testCli = spy => {
             return Promise.delay(20).then(() => 'some return value');
         }
     };
+    const ParseOptsAction   = class ParseOptsAction extends Action {
+        run(context, options) {
+            return Promise.delay(1000).then(() => {
+                console.log('Hoi');
+            });
+        }
+
+        parseArgs(args) {
+            return args;
+        }
+    };
     return new Shipment([
-        SubAction,
+        SomeSubAction,
         AnotherAction,
         BadAction,
-        ReturnValueAction
+        ReturnValueAction,
+        ParseOptsAction
     ]);
 };
 
