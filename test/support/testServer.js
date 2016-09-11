@@ -2,4 +2,4 @@
 
 const shipment = require('./testShipment');
 
-shipment.serve();
+module.exports = () => shipment.serve();
