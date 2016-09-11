@@ -5,12 +5,13 @@ const Action   = require('./../lib/Action');
 
 require('./support/support');
 
-const testCli = require('./support/testCli');
+const testShipment = require('./support/testShipment');
 
 const sinon    = require('sinon');
 const Bluebird = require('bluebird');
 const execa    = require('execa');
 const path     = require('path');
+const request  = require('supertest');
 
 describe('Shipment', () => {
 
@@ -40,7 +41,7 @@ describe('Shipment', () => {
 
         actionSpy = sinon.spy();
 
-        shipment = testCli(actionSpy);
+        shipment = testShipment(actionSpy);
     });
 
     describe('cli', () => {
@@ -163,5 +164,53 @@ describe('Shipment', () => {
 
             shipment.api().badAction().should.be.rejected;
         });
-    })
+    });
+
+    /**
+     * High level server tests
+     * Low-level (e.g. route creation) should go in ShipmentServer suite
+     */
+    describe('serve', () => {
+
+        let server;
+
+        beforeEach(() => {
+
+            server = shipment.serve();
+        });
+
+        afterEach(cb => {
+
+            server.close(cb);
+        });
+
+        it('should 200 OK for existing methods', done => {
+
+            request(server)
+                .post('/some-sub-action')
+                .expect(200, done);
+        });
+
+        it('should 404 on non-existing methods', done => {
+
+            request(server)
+                .post('/some-non-existent-method')
+                .expect(404, done);
+        });
+
+        it('should take input arguments', done => {
+
+            request(server)
+                .post('/to-upper-action')
+                .send({message: 'very very cool message'})
+                .expect(/VERY VERY COOL MESSAGE/, done);
+        });
+
+        it('should print an error when one occurs', done => {
+
+            request(server)
+                .post('/bad-action')
+                .expect(/something went awfully wrong/, done);
+        });
+    });
 });
