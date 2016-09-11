@@ -127,7 +127,7 @@ describe('Action', () => {
             let error   = new Error('Something went horribly wrong');
             (() => action.onError(mockContext, error)).should.throw();
             (() => action.onError(mockContext, error, false)).should.not.throw();
-            mockContext.report.should.have.been.calledWith('fatal', error);
+            mockContext.report.should.have.been.calledWith('fatal', sinon.match({error: sinon.match.string}));
         })
     });
 
