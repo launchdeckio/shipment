@@ -2,7 +2,10 @@
 
 const testCli = require('./testCli');
 
-const shipment      = testCli();
-shipment.exportPath = __filename;
+module.exports = spy => {
 
-module.exports = shipment;
+    const shipment      = testCli(spy);
+    shipment.exportPath = __dirname + '/testShipmentExporter.js';
+
+    return shipment;
+};

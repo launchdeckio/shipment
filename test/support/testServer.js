@@ -1,5 +1,10 @@
 'use strict';
 
-const shipment = require('./testShipment');
+const shipment = require('./testShipment')();
 
-module.exports = () => shipment.serve();
+const serve = () => shipment.serve();
+
+if (require.main === module)
+    serve();
+else
+    module.exports = serve;

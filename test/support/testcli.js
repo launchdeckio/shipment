@@ -16,22 +16,33 @@ let testCli = spy => {
 
     spy = functionify(spy);
 
-    const SomeSubAction     = class SomeSubAction extends Action {
+    const SomeSubAction = class SomeSubAction extends Action {
         run(context, options) {
             spy(this);
             console.log('run some action');
         }
     };
-    const AnotherAction     = class AnotherCoolAction extends Action {
+    const AnotherAction = class AnotherCoolAction extends Action {
         run(context, options) {
             spy(this);
             console.log('run another cool action');
         }
     };
-    const BadAction         = class BadAction extends Action {
+    const BadAction     = class BadAction extends Action {
         run(context, options) {
             spy(this);
             throw new Error('something went awfully wrong');
+        }
+    };
+
+
+    const ToUpperAction     = class ToUpperAction extends Action {
+        run(context, options) {
+            console.log(options.message.toUpperCase());
+        }
+
+        parseArgs(args) {
+            return {message: args.message};
         }
     };
     const ReturnValueAction = class ReturnValueAction extends Action {
@@ -39,7 +50,7 @@ let testCli = spy => {
             return Promise.delay(20).then(() => 'some return value');
         }
     };
-    const ParseOptsAction   = class ParseOptsAction extends Action {
+    const PassArgsAction    = class PassArgsAction extends Action {
         run(context, options) {
             return Promise.delay(1000).then(() => {
                 console.log('Hoi');
@@ -54,8 +65,9 @@ let testCli = spy => {
         SomeSubAction,
         AnotherAction,
         BadAction,
+        ToUpperAction,
         ReturnValueAction,
-        ParseOptsAction
+        PassArgsAction
     ]);
 };
 
