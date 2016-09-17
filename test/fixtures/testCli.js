@@ -38,7 +38,9 @@ let testCli = spy => {
 
     const ToUpperAction     = class ToUpperAction extends Action {
         run(context, options) {
-            console.log(options.message.toUpperCase());
+            var toUpperCase = options.message.toUpperCase();
+            console.log(toUpperCase);
+            return toUpperCase;
         }
 
         parseArgs(args) {
