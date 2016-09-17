@@ -1,6 +1,6 @@
 'use strict';
 
-require('./support/support');
+require('./support/index');
 
 const sinon = require('sinon');
 const _     = require('lodash');

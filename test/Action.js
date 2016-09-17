@@ -7,7 +7,7 @@ const sinonAsPromised = require('sinon-as-promised');
 const sprintf         = require('sprintf-js').sprintf;
 const Promise         = require('bluebird');
 
-require('./support/support');
+require('./support/index');
 
 const Action  = require('./../lib/Action');
 const Context = require('./../lib/Context');
@@ -34,16 +34,21 @@ describe('Action', () => {
         subAction                      = new SubAction();
         customContextSpy               = sinon.spy();
         MockContext                    = class {
-            constructor() {
+            constructor(options = {}) {
                 customContextSpy(...arguments);
+                this.options = {};
             }
 
             getUptime() {
                 return 1337;
             }
+
+            withScope(scope, fn) {
+                return fn(this);
+            }
         };
         mockContext                    = new MockContext({});
-        CustomContextSubAction         = class extends SubAction {
+        CustomContextSubAction         = class SomeCustomContextSubAction extends SubAction {
             parseContextArgs(args, cli) {
                 return {foo: 'bar', cli};
             }
@@ -54,14 +59,6 @@ describe('Action', () => {
 
     afterEach(() => {
         process.chdir(cwd);
-    });
-
-    describe('run', () => {
-
-        it('should throw if not implemented', () => {
-
-            (() => (new Action()).run(null, {})).should.throw();
-        });
     });
 
     describe('getDescription', () => {
@@ -110,26 +107,27 @@ describe('Action', () => {
 
     describe('onSuccess', () => {
 
-        it('should invoke onSuccess on the reporter', () => {
+        it('should invoke report on the context', () => {
 
-            mockContext.reporter = {
-                onSuccess: sinon.spy()
+            mockContext = {
+                report: sinon.spy()
             };
             action.onSuccess(mockContext);
-            mockContext.reporter.onSuccess.should.have.been.calledWith(action, 1337);
+            mockContext.report.should.have.been.calledWith('info');
         })
     });
 
     describe('onError', () => {
 
-        it('should invoke onError on the reporter', () => {
+        it('should invoke report on the context', () => {
 
-            mockContext.reporter = {
-                onError: sinon.spy()
+            mockContext = {
+                report: sinon.spy()
             };
-            let error            = new Error('Something went horribly wrong');
-            action.onError(mockContext, error);
-            mockContext.reporter.onError.should.have.been.calledWith(action, error, 1337);
+            let error   = new Error('Something went horribly wrong');
+            (() => action.onError(mockContext, error)).should.throw();
+            (() => action.onError(mockContext, error, false)).should.not.throw();
+            mockContext.report.should.have.been.calledWith('fatal', sinon.match({error: sinon.match.string}));
         })
     });
 
@@ -166,14 +164,26 @@ describe('Action', () => {
             action.prepare().should.be.a('function');
         });
 
-        it('should return a function that invokes beforeRun, run, afterRun in that order and with the context and options', () => {
+        it('should return a function that invokes action.execute within a scoped context', () => {
 
+            sinon.stub(action, 'execute');
+            sinon.spy(mockContext, 'withScope');
+            action.prepare(mockContext, {})();
+            action.execute.should.have.beenCalled;
+            mockContext.withScope.should.have.been.calledWithMatch({action: {name: 'action'}});
+        });
+    });
+
+    describe('execute', () => {
+
+        it('should invoke beforeRun, run, afterRun in order', () => {
             _.forEach(['beforeRun', 'afterRun'], fn => sinon.spy(action, fn));
             sinon.stub(action, 'run', () => Promise.delay(10));
             sinon.stub(action, 'parseArgs', args => {
                 return {foofoo: args.foo};
             });
-            return action.prepare(mockContext, {foo: 'barbar'})().then(() => {
+            mockContext.report = sinon.stub();
+            return action.execute(mockContext, {foo: 'barbar'}).then(() => {
                 _.forEach(['beforeRun', 'run', 'afterRun'], fn => {
                     action[fn].should.have.been.calledOnce;
                     action[fn].should.have.been.calledWith(mockContext, sinon.match({foofoo: 'barbar'}));
@@ -187,10 +197,7 @@ describe('Action', () => {
     describe('executeCli', () => {
 
         beforeEach(() => {
-            mockContext.reporter = {
-                onError:   sinon.spy(),
-                onSuccess: sinon.spy()
-            };
+            mockContext.reporter = {};
             sinon.stub(action, 'makeContext').returns(mockContext);
         });
 
@@ -199,28 +206,16 @@ describe('Action', () => {
             let exec = sinon.stub().resolves();
             sinon.stub(action, 'prepare', () => exec);
             // sinon.stub(action, 'makeContext');
-            action.executeCli({some: 'arg'}).then(() => {
+            return action.executeCli({some: 'arg'}).then(() => {
                 action.prepare.should.have.been.calledWith(mockContext, sinon.match({some: 'arg'}));
                 exec.should.have.beenCalled;
             });
         });
 
-        it('should invoke onError on the reporter if the exec function rejects', () => {
+        it('should catch thrown error', () => {
 
             sinon.stub(action, 'prepare').returns(() => Promise.reject());
-            action.executeCli({}).then(() => {
-                mockContext.reporter.onError.should.have.been.called;
-                mockContext.reporter.onSuccess.should.not.have.been.called;
-            });
-        });
-
-        it('should invoke onSuccess on the reporter if the exec function resolves', () => {
-
-            sinon.stub(action, 'prepare').returns(() => Promise.resolve());
-            action.executeCli({}).then(() => {
-                mockContext.reporter.onSuccess.should.have.been.called;
-                mockContext.reporter.onError.should.not.have.been.called;
-            });
+            return action.executeCli({}, 0).should.eventually.be.fulfilled;
         });
     });
 

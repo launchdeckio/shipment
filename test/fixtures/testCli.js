@@ -16,22 +16,35 @@ let testCli = spy => {
 
     spy = functionify(spy);
 
-    const SubAction         = class SomeSubAction extends Action {
+    const SomeSubAction = class SomeSubAction extends Action {
         run(context, options) {
             spy(this);
             console.log('run some action');
         }
     };
-    const AnotherAction     = class AnotherCoolAction extends Action {
+    const AnotherAction = class AnotherCoolAction extends Action {
         run(context, options) {
             spy(this);
             console.log('run another cool action');
         }
     };
-    const BadAction         = class BadAction extends Action {
+    const BadAction     = class BadAction extends Action {
         run(context, options) {
             spy(this);
             throw new Error('something went awfully wrong');
+        }
+    };
+
+
+    const ToUpperAction     = class ToUpperAction extends Action {
+        run(context, options) {
+            var toUpperCase = options.message.toUpperCase();
+            console.log(toUpperCase);
+            return toUpperCase;
+        }
+
+        parseArgs(args) {
+            return {message: args.message};
         }
     };
     const ReturnValueAction = class ReturnValueAction extends Action {
@@ -39,11 +52,24 @@ let testCli = spy => {
             return Promise.delay(20).then(() => 'some return value');
         }
     };
+    const PassArgsAction    = class PassArgsAction extends Action {
+        run(context, options) {
+            return Promise.delay(1000).then(() => {
+                console.log('Hoi');
+            });
+        }
+
+        parseArgs(args) {
+            return args;
+        }
+    };
     return new Shipment([
-        SubAction,
+        SomeSubAction,
         AnotherAction,
         BadAction,
-        ReturnValueAction
+        ToUpperAction,
+        ReturnValueAction,
+        PassArgsAction
     ]);
 };
 
