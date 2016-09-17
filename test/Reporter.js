@@ -31,6 +31,16 @@ describe('Reporter', () => {
 
     });
 
+    it('should, by default, generate methods for each of the underlying logger\'s log levels', () => {
+
+        reporter.info.should.be.a.function;
+        reporter.warn.should.be.a.function;
+        reporter.fatal.should.be.a.function;
+        reporter.error.should.be.a.function;
+        reporter.debug.should.be.a.function;
+        reporter.trace.should.be.a.function;
+    });
+
     it('should use the logger static property to instantiate the logger', () => {
 
         customReporter.logger.custom.should.be.ok;
