@@ -76,15 +76,15 @@ describe('Context', () => {
             context = new CustomReporterContext({}, {someScopeVar: 'beepboop'});
             context.report('info', {someDataVar: 'beepbop'});
             customReporterReportSpy.should.have.been.calledWithMatch('info', {
-                someScopeVar: 'beepboop',
-                someDataVar:  'beepbop'
+                context:     context.id,
+                someDataVar: 'beepbop'
             });
         });
     });
 
     describe('createSubContext', () => {
 
-        it('should create a new context of the same type based on the internal scope, extended with the given scope', () => {
+        it('should create a new context of the same type with the given scope', () => {
 
             let options       = {verbosity: 3};
             let internalScope = {base: 'foo'};
@@ -94,7 +94,8 @@ describe('Context', () => {
             internalScope.should.deep.equal({base: 'foo'}); //First, check if the initial scope was not modified (no side-effects)
             subContext.should.be.an.instanceOf(CustomReporterContext);
             subContext.options.should.deep.equal(options);
-            subContext.scope.should.deep.equal({ext: 'bar', base: 'foo'});
+            subContext.parent.should.equal(customContext);
+            subContext.scope.should.deep.equal({ext: 'bar'});
         });
     });
 
@@ -102,7 +103,7 @@ describe('Context', () => {
 
         it('should run some function with a subContext that includes the given scope', () => {
 
-            new Context({}, {base: 'foo'}).withScope({ext: 'bar'}, context => context.scope.base + context.scope.ext)
+            new Context({}, {base: 'foo'}).withScope({ext: 'bar'}, context => context.parent.scope.base + context.scope.ext)
                 .should.equal('foobar');
         });
     });
