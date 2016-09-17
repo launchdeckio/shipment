@@ -1,6 +1,6 @@
 {
   "name": "shipment",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "Provides basic functionality for exposing standardized a CLI, node module API, and HTTP API.",
   "main": "lib/Shipment.js",
   "engines": {
