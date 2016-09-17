@@ -21,7 +21,7 @@ describe('Shipment', () => {
      * @returns {Function}
      */
     const resultOf = (args) => {
-        return execa('node', [path.join(__dirname, 'fixtures/testcli.js')].concat(args));
+        return execa('node', [path.join(__dirname, 'fixtures/testCli.js')].concat(args));
     };
 
     /**
