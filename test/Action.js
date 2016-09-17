@@ -225,9 +225,8 @@ describe('Action', () => {
 
             let exec = sinon.stub().resolves();
             sinon.stub(action, 'prepare').returns(exec);
-            // sinon.stub(action, 'makeContext');
             action.executeApi({some: 'arg'}).then(() => {
-                action.prepare.should.have.been.calledWith(mockContext, sinon.match({some: 'arg'}));
+                action.prepare.should.have.been.calledWith(sinon.match.object, sinon.match({some: 'arg'}));
                 exec.should.have.beenCalled;
             });
         });
