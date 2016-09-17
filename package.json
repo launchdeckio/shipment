@@ -8,7 +8,8 @@
   },
   "scripts": {
     "pretest": "jshint lib",
-    "test": "mocha --recursive -R spec"
+    "test": "mocha --recursive -R spec",
+    "test-coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- --recursive && opn coverage/lcov-report/index.html"
   },
   "repository": {
     "type": "git",
@@ -45,8 +46,10 @@
     "coveralls": "^2.11.12",
     "execa": "^0.4.0",
     "functionify": "^1.0.4",
+    "istanbul": "^0.4.5",
     "jshint": "^2.9.3",
     "mocha": "^3.0.2",
+    "opn-cli": "^3.1.0",
     "sinon": "^1.17.5",
     "sinon-as-promised": "^4.0.2",
     "sinon-chai": "^2.8.0",
