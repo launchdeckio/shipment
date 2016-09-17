@@ -100,6 +100,14 @@ describe('Shipment', () => {
             });
         });
 
+        describe('subcommand with input arguments', () => {
+
+            it('should take input arguments', () => {
+
+                return stdoutOf(['to-upper-action', '--message', 'very very cool message']).should.have.string('VERY VERY COOL MESSAGE');
+            });
+        });
+
         describe('subcommand that throws', () => {
 
             it('should have a non-zero exitcode', () => {
