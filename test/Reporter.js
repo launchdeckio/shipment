@@ -2,7 +2,7 @@
 
 const Reporter = require('./../lib/Reporter');
 
-require('./support/support');
+require('./support/index');
 
 const sinon = require('sinon');
 

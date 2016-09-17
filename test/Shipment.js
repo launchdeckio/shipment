@@ -3,9 +3,9 @@
 const Shipment = require('./../lib/Shipment');
 const Action   = require('./../lib/Action');
 
-require('./support/support');
+require('./support/index');
 
-const testShipment = require('./support/testShipment');
+const testShipment = require('./fixtures/testShipment');
 
 const sinon    = require('sinon');
 const Bluebird = require('bluebird');
@@ -21,7 +21,7 @@ describe('Shipment', () => {
      * @returns {Function}
      */
     const resultOf = (args) => {
-        return execa('node', [path.join(__dirname, 'support/testcli.js')].concat(args));
+        return execa('node', [path.join(__dirname, 'fixtures/testcli.js')].concat(args));
     };
 
     /**

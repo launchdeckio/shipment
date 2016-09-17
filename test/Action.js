@@ -7,7 +7,7 @@ const sinonAsPromised = require('sinon-as-promised');
 const sprintf         = require('sprintf-js').sprintf;
 const Promise         = require('bluebird');
 
-require('./support/support');
+require('./support/index');
 
 const Action  = require('./../lib/Action');
 const Context = require('./../lib/Context');
