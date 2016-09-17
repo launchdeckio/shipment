@@ -225,7 +225,7 @@ describe('Action', () => {
 
             let exec = sinon.stub().resolves();
             sinon.stub(action, 'prepare').returns(exec);
-            action.executeApi({some: 'arg'}).then(() => {
+            return action.executeApi({some: 'arg'}).then(() => {
                 action.prepare.should.have.been.calledWith(sinon.match.object, sinon.match({some: 'arg'}));
                 exec.should.have.beenCalled;
             });
