@@ -39,6 +39,7 @@ module.exports = class ToUpper extends BaseAction {
 #### Expose a CLI, HTTP server or API!
 
 ```js
+#!/usr/bin/env node
 // my-module.js
 
 const Shipment = require('shipment');
