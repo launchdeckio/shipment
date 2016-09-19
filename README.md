@@ -13,6 +13,55 @@
 $ npm install shipment
 ```
 
+### Usage
+
+#### Define an action
+
+```js
+// actions/ToUpper.js
+
+module.exports = class ToUpper extends Action {
+
+    run(context, options) {
+        var toUpperCase = options.message.toUpperCase();
+        context.report('info', {result: toUpperCase});
+        return toUpperCase;
+    }
+
+    parseArgs(args) {
+        return {message: args.message};
+    }
+}
+```
+
+#### Expose a CLI, HTTP server or API!
+
+```js
+// my-module.js
+
+const Shipment = require('shipment');
+
+const shipment = new Shipment([
+  require('./actions/ToUpper.js')
+]);
+
+// Expose a CLI
+shipment.cli();
+// $ my-module.js to-upper --message bar
+// BAR
+
+// Or expose an HTTP server!
+shipment.serve();
+// $ curl -H "Content-Type: application/json" -X POST -d '{"message": "bar"}' http://localhost:6565/to-upper
+// BAR
+
+// Or simply a Node.js module
+module.exports = shipment.api();
+// require('./my-module.js').toUpper({message: "bar"}).then(console.log);
+// BAR
+
+```
+
 ## License
 
 MIT © [JM Versteeg](http://github.com/jmversteeg)
