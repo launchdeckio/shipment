@@ -50,19 +50,17 @@ const shipment = new Shipment([
 // Expose a CLI
 shipment.cli();
 // $ my-module.js to-upper --message bar
-// BAR
 
 // Or expose an HTTP server!
 shipment.serve();
 // $ curl -H "Content-Type: application/json" -X POST -d '{"message": "bar"}' http://localhost:6565/to-upper
-// BAR
 
 // Or simply a Node.js module
 module.exports = shipment.api();
 // require('./my-module.js').toUpper({message: "bar"}).then(console.log);
-// BAR
-
 ```
+
+Note: all output is printed through [pino](https://github.com/mcollina/pino) for now, the implementation of an output formatter is a [planned feature](https://github.com/launchdeckio/shipment/issues/7)
 
 ## License
 
