@@ -20,7 +20,9 @@ $ npm install shipment
 ```js
 // actions/ToUpper.js
 
-module.exports = class ToUpper extends Action {
+const BaseAction = require('shipment').Action;
+
+module.exports = class ToUpper extends BaseAction {
 
     run(context, options) {
         var toUpperCase = options.message.toUpperCase();
