@@ -94,7 +94,7 @@ describe('Shipment', () => {
 
         describe('subcommand', () => {
 
-            it('should run the action', () => {
+            it('should output the return value of "run"', () => {
 
                 return stdoutOf(['some-sub-action']).should.have.string('run some action');
             });

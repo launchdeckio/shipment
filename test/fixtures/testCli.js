@@ -19,13 +19,13 @@ let testCli = spy => {
     const SomeSubAction = class SomeSubAction extends Action {
         run(context, options) {
             spy(this);
-            console.log('run some action');
+            return 'run some action';
         }
     };
     const AnotherAction = class AnotherCoolAction extends Action {
         run(context, options) {
             spy(this);
-            console.log('run another cool action');
+            return 'run another cool action';
         }
     };
     const BadAction     = class BadAction extends Action {
@@ -39,7 +39,6 @@ let testCli = spy => {
     const ToUpperAction     = class ToUpperAction extends Action {
         run(context, options) {
             var toUpperCase = options.message.toUpperCase();
-            console.log(toUpperCase);
             return toUpperCase;
         }
 
