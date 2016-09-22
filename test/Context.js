@@ -21,10 +21,7 @@ describe('Context', () => {
         CustomReporter                 = class {
             constructor() {
                 customReporterConstructorSpy(...arguments);
-            }
-
-            report() {
-                customReporterReportSpy(...arguments);
+                this.begin = sinon.spy();
             }
 
             clone() {
@@ -32,6 +29,9 @@ describe('Context', () => {
             }
         };
         CustomReporterContext          = class extends Context {
+            makeReporter() {
+                return new CustomReporter(this);
+            }
         };
         CustomReporterContext.Reporter = CustomReporter;
         customReporterContext          = new CustomReporterContext;
@@ -56,45 +56,35 @@ describe('Context', () => {
         });
     });
 
-    describe('getUptime', () => {
-
-        it('should return the number of milliseconds that have passed since the instantiation of the context', () => {
-
-            context = new Context;
-
-            return Promise.delay(20).then(() => {
-
-                context.getUptime().should.be.within(18, 50); // Yeah this is kinda tricky
-            });
-        });
-    });
-
-    describe('report', () => {
-
-        it('should invoke the report method on the reporter and extend the data with the internal scope', () => {
-
-            context = new CustomReporterContext({}, {someScopeVar: 'beepboop'});
-            context.report('info', {someDataVar: 'beepbop'});
-            customReporterReportSpy.should.have.been.calledWithMatch('info', {
-                context:     context.id,
-                someDataVar: 'beepbop'
-            });
-        });
-    });
-
     describe('createSubContext', () => {
+
+        let options, customContext, subContext, internalScope;
+
+        beforeEach(() => {
+
+            options       = {verbosity: 3};
+            internalScope = {base: 'foo'};
+            customContext = new CustomReporterContext(options, internalScope);
+            subContext    = customContext.createSubContext({ext: 'bar'});
+        });
+
+        it('should not have any side-effects on the initial scope', () => {
+
+            internalScope.should.deep.equal({base: 'foo'});
+        });
+
+        it('should use the same reporter class', () => {
+
+            subContext.should.be.an.instanceOf(CustomReporterContext);
+        });
+
+        it('should set the parent property accordingly', () => {
+
+            subContext.parent.should.equal(customContext);
+        });
 
         it('should create a new context of the same type with the given scope', () => {
 
-            let options       = {verbosity: 3};
-            let internalScope = {base: 'foo'};
-            let customContext = new CustomReporterContext(options, internalScope);
-
-            let subContext = customContext.createSubContext({ext: 'bar'});
-            internalScope.should.deep.equal({base: 'foo'}); //First, check if the initial scope was not modified (no side-effects)
-            subContext.should.be.an.instanceOf(CustomReporterContext);
-            subContext.options.should.deep.equal(options);
-            subContext.parent.should.equal(customContext);
             subContext.scope.should.deep.equal({ext: 'bar'});
         });
     });
