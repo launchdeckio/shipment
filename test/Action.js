@@ -119,15 +119,25 @@ describe('Action', () => {
 
     describe('onError', () => {
 
-        it('should invoke report on the context', () => {
+        let error, mockContext;
+
+        beforeEach(() => {
 
             mockContext = {
                 report: sinon.spy()
             };
-            let error   = new Error('Something went horribly wrong');
-            (() => action.onError(mockContext, error)).should.throw();
-            (() => action.onError(mockContext, error, false)).should.not.throw();
+
+            error = new Error('Something went horribly wrong');
+        });
+
+        it('should invoke report on the context', () => {
+            action.onError(mockContext, error);
             mockContext.report.should.have.been.calledWith('fatal', sinon.match({error: sinon.match.string}));
+        });
+
+        it('is not responsible for rethrowing the error', () => {
+
+            (() => action.onError(mockContext, error)).should.not.throw();
         })
     });
 
@@ -170,7 +180,7 @@ describe('Action', () => {
             sinon.spy(mockContext, 'withScope');
             action.prepare(mockContext, {})();
             action.execute.should.have.beenCalled;
-            mockContext.withScope.should.have.been.calledWithMatch({action: {name: 'action'}});
+            mockContext.withScope.should.have.been.calledWithMatch({action: 'action'});
         });
     });
 
