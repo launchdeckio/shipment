@@ -13,6 +13,56 @@
 $ npm install shipment
 ```
 
+### Usage
+
+#### Define an action
+
+```js
+// actions/ToUpper.js
+
+const BaseAction = require('shipment').Action;
+
+module.exports = class ToUpper extends BaseAction {
+
+    run(context, options) {
+        var toUpperCase = options.message.toUpperCase();
+        context.report('info', {result: toUpperCase});
+        return toUpperCase;
+    }
+
+    parseArgs(args) {
+        return {message: args.message};
+    }
+}
+```
+
+#### Expose a CLI, HTTP server or API!
+
+```js
+#!/usr/bin/env node
+// my-module.js
+
+const Shipment = require('shipment');
+
+const shipment = new Shipment([
+  require('./actions/ToUpper.js')
+]);
+
+// Expose a CLI
+shipment.cli();
+// $ my-module.js to-upper --message bar
+
+// Or expose an HTTP server!
+shipment.serve();
+// $ curl -H "Content-Type: application/json" -X POST -d '{"message": "bar"}' http://localhost:6565/to-upper
+
+// Or simply a Node.js module
+module.exports = shipment.api();
+// require('./my-module.js').toUpper({message: "bar"}).then(console.log);
+```
+
+Note: all output is printed through [pino](https://github.com/mcollina/pino) for now, the implementation of an output formatter is a [planned feature](https://github.com/launchdeckio/shipment/issues/7)
+
 ## License
 
 MIT © [JM Versteeg](http://github.com/jmversteeg)
