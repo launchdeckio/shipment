@@ -25,7 +25,7 @@ describe('Action', () => {
         action                         = new Action();
         subActionSpy                   = sinon.spy();
         subActionCwdSpy                = sinon.spy();
-        SubAction                      = class SomeSubAction extends Action {
+        SubAction                      = class CoolStuffAction extends Action {
             run(context, options) {
                 subActionSpy(...arguments);
                 subActionCwdSpy(process.cwd());
@@ -70,7 +70,7 @@ describe('Action', () => {
 
         it('should derive the action name from the class name by default', () => {
 
-            subAction.getName().should.equal('some-sub-action');
+            subAction.getName().should.equal('cool-stuff');
         });
     });
 
@@ -188,7 +188,7 @@ describe('Action', () => {
             sinon.stub(action, 'parseArgs', args => {
                 return {foofoo: args.foo};
             });
-            mockContext.reporter = {result: sinon.spy(), done: sinon.spy()};
+            mockContext.reporter = {result: sinon.spy(), done: sinon.spy(), run: sinon.spy()};
             return action.execute(mockContext, {foo: 'barbar'}).then(() => {
                 _.forEach(['beforeRun', 'run', 'afterRun'], fn => {
                     action[fn].should.have.been.calledOnce;
@@ -296,7 +296,7 @@ describe('Action', () => {
             let yargs = require('yargs');
             (subAction).register(yargs, 0);
             subActionSpy.should.not.have.been.called;
-            yargs.parse('some-sub-action');
+            yargs.parse('cool-stuff');
             return Promise.delay(20).then(() => {
                 // Because the actions are ran via Promises that cannot be intercepted when calling yargs.parse
                 subActionSpy.should.have.been.calledOnce;

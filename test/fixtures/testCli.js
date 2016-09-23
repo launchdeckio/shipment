@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 'use strict';
 
 const Shipment = require('./../../lib/Shipment');
@@ -16,25 +18,24 @@ let testCli = spy => {
 
     spy = functionify(spy);
 
-    const SomeSubAction = class SomeSubAction extends Action {
+    const DoSomething           = class DoSomething extends Action {
         run(context, options) {
             spy(this);
-            return 'run some action';
+            return 'did something';
         }
     };
-    const AnotherAction = class AnotherCoolAction extends Action {
+    const DoSomethingElseAction = class DoSomethingElseAction extends Action {
         run(context, options) {
             spy(this);
-            return 'run another cool action';
+            return 'did something else';
         }
     };
-    const BadAction     = class BadAction extends Action {
+    const FailAction            = class FailAction extends Action {
         run(context, options) {
             spy(this);
             throw new Error('something went awfully wrong');
         }
     };
-
 
     const ToUpperAction     = class ToUpperAction extends Action {
         run(context, options) {
@@ -63,9 +64,9 @@ let testCli = spy => {
         }
     };
     return new Shipment([
-        SomeSubAction,
-        AnotherAction,
-        BadAction,
+        DoSomething,
+        DoSomethingElseAction,
+        FailAction,
         ToUpperAction,
         ReturnValueAction,
         PassArgsAction

@@ -39,7 +39,7 @@ describe('ShipmentWorker', function () {
 
         it('should invoke the action with the given name and return a promise', () => {
 
-            return shipmentWorker.call({action: 'some-sub-action'}).should.be.fulfilled;
+            return shipmentWorker.call({action: 'do-something'}).should.be.fulfilled;
         });
 
         it('should throw when the given action does not exist', () => {
@@ -48,18 +48,18 @@ describe('ShipmentWorker', function () {
         });
 
         it('should reject if the action handler throws', () => {
-            return shipmentWorker.call({action: 'bad-action'}).should.be.rejected;
+            return shipmentWorker.call({action: 'fail'}).should.be.rejected;
         });
 
         it('should await completion of the action', () => {
 
-            return shipmentWorker.call({action: 'return-value-action'}).should.eventually.equal('some return value');
+            return shipmentWorker.call({action: 'return-value'}).should.eventually.equal('some return value');
         });
 
         it('should take input arguments', () => {
 
             return shipmentWorker.call({
-                action: 'to-upper-action',
+                action: 'to-upper',
                 args:   {message: 'oy mate'}
             }).should.eventually.equal('OY MATE');
         });

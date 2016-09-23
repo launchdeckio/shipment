@@ -66,7 +66,7 @@ describe('Shipment', () => {
 
             actionSpy.should.not.have.been.called;
 
-            shipment.cli(['some-sub-action']);
+            shipment.cli(['do-something']);
 
             // Because there is no way to intercept the control flow when issuing subcommands via yargs
             // Could also use an eventemitter architecture
@@ -75,7 +75,7 @@ describe('Shipment', () => {
                 actionSpy.should.have.been.calledOnce;
                 let action = actionSpy.firstCall.args[0];
                 action.should.be.an.instanceOf(Action);
-                action.getName().should.equal('some-sub-action');
+                action.getName().should.equal('do-something');
             });
         });
 
@@ -96,7 +96,7 @@ describe('Shipment', () => {
 
             it('should output the return value of "run"', () => {
 
-                return stdoutOf(['some-sub-action']).should.have.string('run some action');
+                return stdoutOf(['do-something']).should.have.string('did something');
             });
         });
 
@@ -104,7 +104,7 @@ describe('Shipment', () => {
 
             it('should take input arguments', () => {
 
-                return stdoutOf(['to-upper-action', '--message', 'very very cool message']).should.have.string('VERY VERY COOL MESSAGE');
+                return stdoutOf(['to-upper', '--message', 'very very cool message']).should.have.string('VERY VERY COOL MESSAGE');
             });
         });
 
@@ -112,7 +112,7 @@ describe('Shipment', () => {
 
             it('should have a non-zero exitcode', () => {
 
-                return resultOf(['bad-action']).catch(error => {
+                return resultOf(['fail']).catch(error => {
                     error.should.have.property('code').that.is.not.equal(0);
                     return 'ok';
                 }).should.eventually.equal('ok');
@@ -124,9 +124,9 @@ describe('Shipment', () => {
             it('should print the subcommands', () => {
 
                 return stdoutOf(['--help']).should
-                    .have.string('some-sub-action').and
-                    .have.string('another-cool-action').and
-                    .have.string('bad-action');
+                    .have.string('do-something').and
+                    .have.string('do-something-else').and
+                    .have.string('fail');
             });
         });
 
@@ -149,28 +149,28 @@ describe('Shipment', () => {
         it('should expose the actions as functions on the returned object', () => {
 
             let api = shipment.api();
-            api.someSubAction.should.be.a('function');
-            api.anotherCoolAction.should.be.a('function');
+            api.doSomething.should.be.a('function');
+            api.doSomethingElse.should.be.a('function');
         });
 
         it('should invoke the correct action runners upon calling the corresponding function on the api object', () => {
 
             actionSpy.should.not.have.been.called;
-            return shipment.api().anotherCoolAction().then(() => {
+            return shipment.api().doSomethingElse().then(() => {
                 actionSpy.should.have.been.calledOnce;
                 let action = actionSpy.firstCall.args[0];
-                action.getName().should.equal('another-cool-action');
+                action.getName().should.equal('do-something-else');
             });
         });
 
         it('should return a promise for the return value of the action', () => {
 
-            shipment.api().returnValueAction().should.eventually.equal('some return value');
+            shipment.api().returnValue().should.eventually.equal('some return value');
         });
 
         it('should reject if the action throws', () => {
 
-            shipment.api().badAction().should.be.rejected;
+            shipment.api().fail().should.be.rejected;
         });
     });
 
@@ -195,7 +195,7 @@ describe('Shipment', () => {
         it('should 200 OK for existing methods', done => {
 
             request(server)
-                .post('/some-sub-action')
+                .post('/do-something')
                 .expect(200, done);
         });
 
@@ -209,7 +209,7 @@ describe('Shipment', () => {
         it('should take input arguments', done => {
 
             request(server)
-                .post('/to-upper-action')
+                .post('/to-upper')
                 .send({message: 'very very cool message'})
                 .expect(/VERY VERY COOL MESSAGE/, done);
         });
@@ -217,7 +217,7 @@ describe('Shipment', () => {
         it('should print an error when one occurs', done => {
 
             request(server)
-                .post('/bad-action')
+                .post('/fail')
                 .expect(/something went awfully wrong/, done);
         });
     });
