@@ -25,9 +25,7 @@ const BaseAction = require('shipment').Action;
 module.exports = class ToUpper extends BaseAction {
 
     run(context, options) {
-        var toUpperCase = options.message.toUpperCase();
-        context.report('info', {result: toUpperCase});
-        return toUpperCase;
+        return options.message.toUpperCase();
     }
 
     parseArgs(args) {
