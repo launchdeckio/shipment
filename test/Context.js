@@ -78,14 +78,19 @@ describe('Context', () => {
             subContext.should.be.an.instanceOf(CustomReporterContext);
         });
 
-        it('should set the parent property accordingly', () => {
-
-            subContext.parent.should.equal(customContext);
-        });
-
-        it('should create a new context of the same type with the given scope', () => {
+        it('should create a new context with the given scope', () => {
 
             subContext.scope.should.deep.equal({ext: 'bar'});
+        });
+
+        it('should set the parent property accordingly', () => {
+
+            subContext.parent.should.equal(customContext.id);
+        });
+
+        it('should create a new context with a unique ID', () => {
+
+            subContext.id.should.not.equal(customContext.id);
         });
     });
 
@@ -93,8 +98,7 @@ describe('Context', () => {
 
         it('should run some function with a subContext that includes the given scope', () => {
 
-            new Context({}, {base: 'foo'}).withScope({ext: 'bar'}, context => context.parent.scope.base + context.scope.ext)
-                .should.equal('foobar');
+            new Context({}, {base: 'foo'}).withScope({ext: 'bar'}, context => context.scope.ext).should.equal('bar');
         });
     });
 });
