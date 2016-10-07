@@ -2,7 +2,7 @@
 
 'use strict';
 
-const reader     = require('./generate/testParserCliReporterStream');
-const parseStdin = require('./generate/testStdinParser');
+const reader = require('./generate/testParserCliReporterStream');
+const stdin  = require('./generate/testStdin');
 
-parseStdin(reader);
+stdin.pipe(reader);
