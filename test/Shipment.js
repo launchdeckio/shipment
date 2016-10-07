@@ -18,19 +18,23 @@ describe('Shipment', () => {
     /**
      * Return a fluent assertion builder for the complete execa result of a call to testcli with the given args
      * @param {String[]} args
+     * @param {Boolean} allowError
      * @returns {Function}
      */
-    const resultOf = (args) => {
-        return execa('node', [path.join(__dirname, 'fixtures/testCli.js')].concat(args));
+    const resultOf = (args, allowError = false) => {
+        let promise = execa('node', [path.join(__dirname, 'fixtures/testCli.js')].concat(args));
+        if (allowError) promise = promise.catch(error => error);
+        return promise;
     };
 
     /**
      * Return a fluent assertion builder for the stdout buffer of a call to testcli with the given args
      * @param {String[]} args
+     * @param {Boolean} allowError
      * @returns {Function}
      */
-    const stdoutOf = (args) => {
-        let builder    = resultOf(args).should.eventually.have.property('stdout');
+    const stdoutOf = (args, allowError = false) => {
+        let builder    = resultOf(args, allowError).should.eventually.have.property('stdout');
         builder.should = builder;
         return builder;
     };
@@ -112,7 +116,7 @@ describe('Shipment', () => {
 
             it('should print the error message', () => {
 
-                return stdoutOf(['fail']).should.have.string('something went awfully wrong');
+                return stdoutOf(['fail'], true).should.have.string('something went awfully wrong');
             });
 
             it('should have a non-zero exitcode', () => {
