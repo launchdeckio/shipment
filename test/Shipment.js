@@ -110,6 +110,11 @@ describe('Shipment', () => {
 
         describe('subcommand that throws', () => {
 
+            it('should print the error message', () => {
+
+                return stdoutOf(['fail']).should.have.string('something went awfully wrong');
+            });
+
             it('should have a non-zero exitcode', () => {
 
                 return resultOf(['fail']).catch(error => {
