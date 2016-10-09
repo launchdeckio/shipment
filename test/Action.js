@@ -106,10 +106,10 @@ describe('Action', () => {
         it('should invoke report on the context', () => {
 
             mockContext = {
-                reporter: {done: sinon.spy()}
+                emit: {done: sinon.spy()}
             };
             action.onSuccess(mockContext);
-            mockContext.reporter.done.should.have.been.called;
+            mockContext.emit.done.should.have.been.called;
         })
     });
 
@@ -120,7 +120,7 @@ describe('Action', () => {
         beforeEach(() => {
 
             mockContext = {
-                reporter: {error: sinon.spy()}
+                emit: {error: sinon.spy()}
             };
 
             error = new Error('Something went horribly wrong');
@@ -128,7 +128,7 @@ describe('Action', () => {
 
         it('should invoke report on the context', () => {
             action.onError(mockContext, error);
-            mockContext.reporter.error.should.have.been.calledWith(error);
+            mockContext.emit.error.should.have.been.calledWith(error);
         });
 
         it('is not responsible for rethrowing the error', () => {
@@ -188,7 +188,7 @@ describe('Action', () => {
             sinon.stub(action, 'parseArgs', args => {
                 return {foofoo: args.foo};
             });
-            mockContext.reporter = {result: sinon.spy(), done: sinon.spy(), run: sinon.spy()};
+            mockContext.emit = {runAction: sinon.spy(), result: sinon.spy(), done: sinon.spy()};
             return action.execute(mockContext, {foo: 'barbar'}).then(() => {
                 _.forEach(['beforeRun', 'run', 'afterRun'], fn => {
                     action[fn].should.have.been.calledOnce;
@@ -203,7 +203,7 @@ describe('Action', () => {
     describe('executeCli', () => {
 
         beforeEach(() => {
-            mockContext.reporter = {};
+            mockContext.emit = {};
             sinon.stub(action, 'makeContext').returns(mockContext);
         });
 

@@ -2,8 +2,8 @@
 
 const sinon = require('sinon');
 
-const EventParser   = require('./../../lib/parse/EventParser');
-const ParserContext = require('./../../lib/parse/ParseContext');
+const EventParser   = require('./../../lib/events/EventParser');
+const ParserContext = require('./../../lib/events/ParseContext');
 
 require('./../support');
 

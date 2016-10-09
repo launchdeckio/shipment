@@ -2,7 +2,7 @@
 
 const parse = require('./testParser');
 
-const reportCli = require('./../../../lib/parse/reportCli');
+const reportCli = require('./../../../lib/events/eventFormatters');
 
 reportCli(parse.emitter, {verbosity: 1});
 
