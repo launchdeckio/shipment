@@ -2,9 +2,7 @@
 
 const Reporter = require('./../lib/Reporter');
 
-require('./support/index');
-
-const sinon = require('sinon');
+require('./support');
 
 describe('Reporter', () => {
 
@@ -18,6 +16,8 @@ describe('Reporter', () => {
         };
         customReporter = new CustomReporter();
     });
+
+    // TODO static cliReporters test
 
     afterEach(() => {
 
