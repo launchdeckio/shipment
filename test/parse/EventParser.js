@@ -55,7 +55,6 @@ describe('EventParser', () => {
             let reducer = sinon.spy();
             parser.use(data => reducer(data.get('something')));
 
-            parser.receive(beginObj);
             parser.receive(customObj);
 
             reducer.should.have.been.calledOnce;
@@ -97,7 +96,6 @@ describe('EventParser', () => {
 
             parser.setStrict();
 
-            parser.receive(beginObj);
             (() => parser.receive(customObj)).should.throw();
         });
 
