@@ -7,7 +7,7 @@
     "node": ">=6"
   },
   "scripts": {
-    "pretest": "jshint lib",
+    "pretest": "jshint --verbose lib",
     "test": "mocha --recursive -R spec",
     "test-coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- --recursive && opn coverage/lcov-report/index.html"
   },
