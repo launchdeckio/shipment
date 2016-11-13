@@ -219,7 +219,7 @@ describe('Shipment', () => {
 
             request(server)
                 .post('/to-upper')
-                .send({message: 'very very cool message'})
+                .send({args: {message: 'very very cool message'}})
                 .expect(/VERY VERY COOL MESSAGE/, done);
         });
 
