@@ -18,12 +18,14 @@ let testCli = spy => {
 
     spy = functionify(spy);
 
-    const DoSomething           = class DoSomething extends Action {
+    const DoSomething       = class DoSomething extends Action {
         run(context, options) {
             spy(this);
             return 'did something';
         }
     };
+    DoSomething.description = 'Does something';
+
     const DoSomethingElseAction = class DoSomethingElseAction extends Action {
         run(context, options) {
             spy(this);
