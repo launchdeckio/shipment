@@ -48,6 +48,30 @@ describe('Shipment', () => {
         shipment = testShipment(actionSpy);
     });
 
+    describe('transformAction', () => {
+
+        it('should accept an anonymous function as an action', () => {
+
+            let shipment = new Shipment([function iAmAnonymous(context, args) {
+            }]);
+
+            shipment.actions[0].getName().should.equal('i-am-anonymous');
+        });
+
+        it('should invoke the anonymous function as if it were the run method of the action', () => {
+
+            let callSpy  = sinon.spy();
+            let shipment = new Shipment([function iAmAnonymous(context, args) {
+                callSpy(context, args);
+            }]);
+
+            return shipment.api().iAmAnonymous({very: 'coolStuff'}).then(() => {
+
+                callSpy.should.have.been.calledWith(sinon.match.any, sinon.match({very: 'coolStuff'}))
+            });
+        })
+    });
+
     describe('cli', () => {
 
         let CustomShipment, customShipment, mockPkg, updateNotifierSpy;
