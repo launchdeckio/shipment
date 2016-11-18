@@ -163,23 +163,6 @@ describe('Action', () => {
         });
     });
 
-    describe('prepare', () => {
-
-        it('should return a function', () => {
-
-            action.prepare().should.be.a('function');
-        });
-
-        it('should return a function that invokes action.execute within a scoped context', () => {
-
-            sinon.stub(action, 'execute');
-            sinon.spy(mockContext, 'withScope');
-            action.prepare(mockContext, {})();
-            action.execute.should.have.beenCalled;
-            mockContext.withScope.should.have.been.calledWithMatch({action: 'action'});
-        });
-    });
-
     describe('execute', () => {
 
         it('should invoke beforeRun, run, afterRun in order', () => {
@@ -207,40 +190,35 @@ describe('Action', () => {
             sinon.stub(action, 'makeContext').returns(mockContext);
         });
 
-        it('should invoke prepare as well as the function returned by prepare', () => {
+        it('should invoke execute', () => {
 
-            let exec = sinon.stub().resolves();
-            sinon.stub(action, 'prepare', () => exec);
-            // sinon.stub(action, 'makeContext');
+            sinon.stub(action, 'execute', () => sinon.stub().resolves());
             return action.executeCli({some: 'arg'}).then(() => {
-                action.prepare.should.have.been.calledWith(mockContext, sinon.match({some: 'arg'}));
-                exec.should.have.beenCalled;
+                action.execute.should.have.been.calledWith(mockContext, sinon.match({some: 'arg'}));
             });
         });
 
         it('should catch thrown error', () => {
 
-            sinon.stub(action, 'prepare').returns(() => Promise.reject());
+            sinon.stub(action, 'execute').returns(() => Promise.reject());
             return action.executeCli({}, 0).should.eventually.be.fulfilled;
         });
     });
 
     describe('executeApi', () => {
 
-        it('should invoke prepare as well as the function returned by prepare', () => {
+        it('should invoke execute', () => {
 
-            let exec = sinon.stub().resolves();
-            sinon.stub(action, 'prepare').returns(exec);
+            sinon.stub(action, 'execute').returns(Promise.resolve());
             return action.executeApi({some: 'arg'}).then(() => {
-                action.prepare.should.have.been.calledWith(sinon.match.object, sinon.match({some: 'arg'}));
-                exec.should.have.beenCalled;
+                action.execute.should.have.been.calledWith(sinon.match.object, sinon.match({some: 'arg'}));
             });
         });
 
         it('should directly return the result of exec', () => {
 
             // let exec = sinon.stub().resolves();
-            sinon.stub(action, 'prepare').returns(() => 'beepboop');
+            sinon.stub(action, 'execute').returns('beepboop');
             return action.executeApi({}).should.equal('beepboop');
         });
 
