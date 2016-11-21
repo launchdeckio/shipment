@@ -1,6 +1,6 @@
 # shipment
 
-> Provides basic functionality for exposing standardized DRY CLI, node module API, and HTTP API.
+> Magic wrapper for running asynchronous actions and reporting realtime events through generated CLI, node module API, or HTTP API.
 
 [![Build Status][travis-image]][travis-url]
 [![Code Quality][codeclimate-image]][codeclimate-url]
@@ -27,11 +27,13 @@ module.exports = class ToUpper extends BaseAction {
     run(context, options) {
         return options.message.toUpperCase();
     }
-
-    parseArgs(args) {
-        return {message: args.message};
-    }
 }
+```
+
+or, even shorter,
+
+```js
+module.exports = (context, options) => options.message.toUpperCase();
 ```
 
 #### Expose a CLI, HTTP server or API!
@@ -52,14 +54,12 @@ shipment.cli();
 
 // Or expose an HTTP server!
 shipment.serve();
-// $ curl -H "Content-Type: application/json" -X POST -d '{"message": "bar"}' http://localhost:6565/to-upper
+// $ curl -X POST -d '{"message": "bar"}' http://localhost:6565/to-upper
 
 // Or simply a Node.js module
 module.exports = shipment.api();
 // require('./my-module.js').toUpper({message: "bar"}).then(console.log);
 ```
-
-Note: all output is printed through [pino](https://github.com/mcollina/pino) for now, the implementation of an output formatter is a [planned feature](https://github.com/launchdeckio/shipment/issues/7)
 
 ## License
 
