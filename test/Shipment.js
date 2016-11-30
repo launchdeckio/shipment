@@ -253,5 +253,21 @@ describe('Shipment', () => {
                 .post('/fail')
                 .expect(/something went awfully wrong/, done);
         });
+
+        it('should explicitly indicate success', done => {
+
+            request(server)
+                .post('/do-something')
+                .expect(/SHIPMENT: ok/, done);
+        });
+
+        it('should explicitly indicate failure', done => {
+
+            request(server)
+                .post('/fail')
+                .expect(/SHIPMENT: error: something went awfully wrong/, done);
+        });
+
+        // TODO add verifyKey tests
     });
 });
