@@ -1,6 +1,6 @@
 # shipment
 
-> Magic wrapper for running asynchronous actions and reporting realtime events through generated CLI, node module API, or HTTP API.
+> Run asynchronous actions and report realtime events through auto-generated CLI, node module API, or HTTP API. Edit
 
 [![Build Status][travis-image]][travis-url]
 [![Code Quality][codeclimate-image]][codeclimate-url]
