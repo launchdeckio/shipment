@@ -63,7 +63,7 @@ module.exports = shipment.api();
 
 ## License
 
-MIT © [JM Versteeg](http://github.com/jmversteeg)
+MIT © [sgtlambda](http://github.com/sgtlambda)
 
 [![dependency Status][david-image]][david-url]
 [![devDependency Status][david-dev-image]][david-dev-url]
