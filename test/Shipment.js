@@ -48,28 +48,31 @@ describe('Shipment', () => {
         shipment = testShipment(actionSpy);
     });
 
-    describe('transformAction', () => {
+    describe('transformActions', () => {
 
-        it('should accept an anonymous function as an action', () => {
+        it('should allow an associative array of action name => action pairings', () => {
 
-            let shipment = new Shipment([function iAmAnonymous(context, args) {
-            }]);
+            let shipment = Shipment.transformActions({
+                someAction:  () => null,
+                otherAction: class NotTheSameName extends Action {
 
-            shipment.actions[0].getName().should.equal('i-am-anonymous');
+                             }
+            });
+
+            shipment[0].getName().should.equal('some-action');
+            shipment[1].getName().should.equal('other-action');
         });
 
-        it('should invoke the anonymous function as if it were the run method of the action', () => {
+        it('should throw if it cannot resolve the name of any of the actions', () => {
 
-            let callSpy  = sinon.spy();
-            let shipment = new Shipment([function iAmAnonymous(context, args) {
-                callSpy(context, args);
-            }]);
+            (() => Shipment.transformActions([
+                () => null,
+            ])).should.throw();
 
-            return shipment.api().iAmAnonymous({very: 'coolStuff'}).then(() => {
-
-                callSpy.should.have.been.calledWith(sinon.match.any, sinon.match({very: 'coolStuff'}))
-            });
-        })
+            (() => Shipment.transformActions({
+                someAction: () => null
+            })).should.not.throw();
+        });
     });
 
     describe('cli', () => {
@@ -87,7 +90,8 @@ describe('Shipment', () => {
                     notify: () => updateNotifierSpy(options.pkg)
                 };
             };
-            customShipment                = new CustomShipment([], {pkg: mockPkg});
+            const customAction            = () => null;
+            customShipment                = new CustomShipment({customAction}, {pkg: mockPkg});
         });
 
         it('should execute the requested action', () => {
@@ -109,14 +113,14 @@ describe('Shipment', () => {
 
         it('should invoke updateNotifier', () => {
 
-            customShipment.cli(['']);
+            customShipment.cli(['custom-action']);
             updateNotifierSpy.should.have.been.calledWith(mockPkg);
         });
 
         it('...unless noUpdateNotifier is given', () => {
 
             let customShipment = new CustomShipment([], {pkg: mockPkg, noUpdateNotifier: true});
-            customShipment.cli(['']);
+            customShipment.cli(['custom-action']);
             updateNotifierSpy.should.not.have.been.called;
         });
 
