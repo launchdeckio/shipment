@@ -1,6 +1,6 @@
 # shipment
 
-> Provides basic functionality for exposing standardized DRY CLI, node module API, and HTTP API.
+> Run asynchronous actions and report realtime events through auto-generated CLI, node module API, or HTTP API. Edit
 
 [![Build Status][travis-image]][travis-url]
 [![Code Quality][codeclimate-image]][codeclimate-url]
@@ -11,6 +11,54 @@
 
 ```bash
 $ npm install shipment
+```
+
+### Usage
+
+#### Define an action
+
+```js
+// actions/ToUpper.js
+
+const BaseAction = require('shipment').Action;
+
+module.exports = class ToUpper extends BaseAction {
+
+    run(context, options) {
+        return options.message.toUpperCase();
+    }
+}
+```
+
+or, even shorter,
+
+```js
+module.exports = (context, options) => options.message.toUpperCase();
+```
+
+#### Expose a CLI, HTTP server or API!
+
+```js
+#!/usr/bin/env node
+// my-module.js
+
+const Shipment = require('shipment');
+
+const shipment = new Shipment([
+  require('./actions/ToUpper.js')
+]);
+
+// Expose a CLI
+shipment.cli();
+// $ my-module.js to-upper --message bar
+
+// Or expose an HTTP server!
+shipment.serve();
+// $ curl -X POST -d '{"message": "bar"}' http://localhost:6565/to-upper
+
+// Or simply a Node.js module
+module.exports = shipment.api();
+// require('./my-module.js').toUpper({message: "bar"}).then(console.log);
 ```
 
 ## License

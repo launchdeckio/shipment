@@ -1,0 +1,4 @@
+{"context":"261f18f0-b6ef-11e6-9f42-6f72afb0a096","timestamp":1480504893440,"begin":{"parent":null,"scope":{"action":"to-upper"}}}
+{"context":"261f18f0-b6ef-11e6-9f42-6f72afb0a096","timestamp":1480504893444,"runAction":"to-upper"}
+{"context":"261f18f0-b6ef-11e6-9f42-6f72afb0a096","timestamp":1480504893447,"result":{"data":"HOI"}}
+{"context":"261f18f0-b6ef-11e6-9f42-6f72afb0a096","timestamp":1480504893447,"done":true}

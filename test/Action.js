@@ -25,7 +25,7 @@ describe('Action', () => {
         action                         = new Action();
         subActionSpy                   = sinon.spy();
         subActionCwdSpy                = sinon.spy();
-        SubAction                      = class SomeSubAction extends Action {
+        SubAction                      = class CoolStuffAction extends Action {
             run(context, options) {
                 subActionSpy(...arguments);
                 subActionCwdSpy(process.cwd());
@@ -37,10 +37,6 @@ describe('Action', () => {
             constructor(options = {}) {
                 customContextSpy(...arguments);
                 this.options = {};
-            }
-
-            getUptime() {
-                return 1337;
             }
 
             withScope(scope, fn) {
@@ -74,7 +70,7 @@ describe('Action', () => {
 
         it('should derive the action name from the class name by default', () => {
 
-            subAction.getName().should.equal('some-sub-action');
+            subAction.getName().should.equal('cool-stuff');
         });
     });
 
@@ -110,24 +106,34 @@ describe('Action', () => {
         it('should invoke report on the context', () => {
 
             mockContext = {
-                report: sinon.spy()
+                emit: {done: sinon.spy()}
             };
             action.onSuccess(mockContext);
-            mockContext.report.should.have.been.calledWith('info');
+            mockContext.emit.done.should.have.been.called;
         })
     });
 
     describe('onError', () => {
 
-        it('should invoke report on the context', () => {
+        let error, mockContext;
+
+        beforeEach(() => {
 
             mockContext = {
-                report: sinon.spy()
+                emit: {error: sinon.spy()}
             };
-            let error   = new Error('Something went horribly wrong');
-            (() => action.onError(mockContext, error)).should.throw();
-            (() => action.onError(mockContext, error, false)).should.not.throw();
-            mockContext.report.should.have.been.calledWith('fatal', sinon.match({error: sinon.match.string}));
+
+            error = new Error('Something went horribly wrong');
+        });
+
+        it('should invoke report on the context', () => {
+            action.onError(mockContext, error);
+            mockContext.emit.error.should.have.been.calledWith(error);
+        });
+
+        it('is not responsible for rethrowing the error', () => {
+
+            (() => action.onError(mockContext, error)).should.not.throw();
         })
     });
 
@@ -157,23 +163,6 @@ describe('Action', () => {
         });
     });
 
-    describe('prepare', () => {
-
-        it('should return a function', () => {
-
-            action.prepare().should.be.a('function');
-        });
-
-        it('should return a function that invokes action.execute within a scoped context', () => {
-
-            sinon.stub(action, 'execute');
-            sinon.spy(mockContext, 'withScope');
-            action.prepare(mockContext, {})();
-            action.execute.should.have.beenCalled;
-            mockContext.withScope.should.have.been.calledWithMatch({action: {name: 'action'}});
-        });
-    });
-
     describe('execute', () => {
 
         it('should invoke beforeRun, run, afterRun in order', () => {
@@ -182,7 +171,7 @@ describe('Action', () => {
             sinon.stub(action, 'parseArgs', args => {
                 return {foofoo: args.foo};
             });
-            mockContext.report = sinon.stub();
+            mockContext.emit = {runAction: sinon.spy(), result: sinon.spy(), done: sinon.spy()};
             return action.execute(mockContext, {foo: 'barbar'}).then(() => {
                 _.forEach(['beforeRun', 'run', 'afterRun'], fn => {
                     action[fn].should.have.been.calledOnce;
@@ -197,44 +186,39 @@ describe('Action', () => {
     describe('executeCli', () => {
 
         beforeEach(() => {
-            mockContext.reporter = {};
+            mockContext.emit = {};
             sinon.stub(action, 'makeContext').returns(mockContext);
         });
 
-        it('should invoke prepare as well as the function returned by prepare', () => {
+        it('should invoke execute', () => {
 
-            let exec = sinon.stub().resolves();
-            sinon.stub(action, 'prepare', () => exec);
-            // sinon.stub(action, 'makeContext');
+            sinon.stub(action, 'execute', () => sinon.stub().resolves());
             return action.executeCli({some: 'arg'}).then(() => {
-                action.prepare.should.have.been.calledWith(mockContext, sinon.match({some: 'arg'}));
-                exec.should.have.beenCalled;
+                action.execute.should.have.been.calledWith(mockContext, sinon.match({some: 'arg'}));
             });
         });
 
         it('should catch thrown error', () => {
 
-            sinon.stub(action, 'prepare').returns(() => Promise.reject());
+            sinon.stub(action, 'execute').returns(() => Promise.reject());
             return action.executeCli({}, 0).should.eventually.be.fulfilled;
         });
     });
 
     describe('executeApi', () => {
 
-        it('should invoke prepare as well as the function returned by prepare', () => {
+        it('should invoke execute', () => {
 
-            let exec = sinon.stub().resolves();
-            sinon.stub(action, 'prepare').returns(exec);
+            sinon.stub(action, 'execute').returns(Promise.resolve());
             return action.executeApi({some: 'arg'}).then(() => {
-                action.prepare.should.have.been.calledWith(sinon.match.object, sinon.match({some: 'arg'}));
-                exec.should.have.beenCalled;
+                action.execute.should.have.been.calledWith(sinon.match.object, sinon.match({some: 'arg'}));
             });
         });
 
         it('should directly return the result of exec', () => {
 
             // let exec = sinon.stub().resolves();
-            sinon.stub(action, 'prepare').returns(() => 'beepboop');
+            sinon.stub(action, 'execute').returns('beepboop');
             return action.executeApi({}).should.equal('beepboop');
         });
 
@@ -290,7 +274,7 @@ describe('Action', () => {
             let yargs = require('yargs');
             (subAction).register(yargs, 0);
             subActionSpy.should.not.have.been.called;
-            yargs.parse('some-sub-action');
+            yargs.parse('cool-stuff');
             return Promise.delay(20).then(() => {
                 // Because the actions are ran via Promises that cannot be intercepted when calling yargs.parse
                 subActionSpy.should.have.been.calledOnce;

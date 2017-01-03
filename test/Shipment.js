@@ -18,19 +18,23 @@ describe('Shipment', () => {
     /**
      * Return a fluent assertion builder for the complete execa result of a call to testcli with the given args
      * @param {String[]} args
+     * @param {Boolean} allowError
      * @returns {Function}
      */
-    const resultOf = (args) => {
-        return execa('node', [path.join(__dirname, 'fixtures/testCli.js')].concat(args));
+    const resultOf = (args, allowError = false) => {
+        let promise = execa('node', [path.join(__dirname, 'fixtures/testCli.js')].concat(args));
+        if (allowError) promise = promise.catch(error => error);
+        return promise;
     };
 
     /**
      * Return a fluent assertion builder for the stdout buffer of a call to testcli with the given args
      * @param {String[]} args
+     * @param {Boolean} allowError
      * @returns {Function}
      */
-    const stdoutOf = (args) => {
-        let builder    = resultOf(args).should.eventually.have.property('stdout');
+    const stdoutOf = (args, allowError = false) => {
+        let builder    = resultOf(args, allowError).should.eventually.have.property('stdout');
         builder.should = builder;
         return builder;
     };
@@ -42,6 +46,30 @@ describe('Shipment', () => {
         actionSpy = sinon.spy();
 
         shipment = testShipment(actionSpy);
+    });
+
+    describe('transformAction', () => {
+
+        it('should accept an anonymous function as an action', () => {
+
+            let shipment = new Shipment([function iAmAnonymous(context, args) {
+            }]);
+
+            shipment.actions[0].getName().should.equal('i-am-anonymous');
+        });
+
+        it('should invoke the anonymous function as if it were the run method of the action', () => {
+
+            let callSpy  = sinon.spy();
+            let shipment = new Shipment([function iAmAnonymous(context, args) {
+                callSpy(context, args);
+            }]);
+
+            return shipment.api().iAmAnonymous({very: 'coolStuff'}).then(() => {
+
+                callSpy.should.have.been.calledWith(sinon.match.any, sinon.match({very: 'coolStuff'}))
+            });
+        })
     });
 
     describe('cli', () => {
@@ -66,7 +94,7 @@ describe('Shipment', () => {
 
             actionSpy.should.not.have.been.called;
 
-            shipment.cli(['some-sub-action']);
+            shipment.cli(['do-something']);
 
             // Because there is no way to intercept the control flow when issuing subcommands via yargs
             // Could also use an eventemitter architecture
@@ -75,7 +103,7 @@ describe('Shipment', () => {
                 actionSpy.should.have.been.calledOnce;
                 let action = actionSpy.firstCall.args[0];
                 action.should.be.an.instanceOf(Action);
-                action.getName().should.equal('some-sub-action');
+                action.getName().should.equal('do-something');
             });
         });
 
@@ -94,9 +122,9 @@ describe('Shipment', () => {
 
         describe('subcommand', () => {
 
-            it('should run the action', () => {
+            it('should output the return value of "run"', () => {
 
-                return stdoutOf(['some-sub-action']).should.have.string('run some action');
+                return stdoutOf(['do-something']).should.have.string('did something');
             });
         });
 
@@ -104,15 +132,20 @@ describe('Shipment', () => {
 
             it('should take input arguments', () => {
 
-                return stdoutOf(['to-upper-action', '--message', 'very very cool message']).should.have.string('VERY VERY COOL MESSAGE');
+                return stdoutOf(['to-upper', '--message', 'very very cool message']).should.have.string('VERY VERY COOL MESSAGE');
             });
         });
 
         describe('subcommand that throws', () => {
 
+            it('should print the error message', () => {
+
+                return stdoutOf(['fail'], true).should.have.string('something went awfully wrong');
+            });
+
             it('should have a non-zero exitcode', () => {
 
-                return resultOf(['bad-action']).catch(error => {
+                return resultOf(['fail']).catch(error => {
                     error.should.have.property('code').that.is.not.equal(0);
                     return 'ok';
                 }).should.eventually.equal('ok');
@@ -124,9 +157,9 @@ describe('Shipment', () => {
             it('should print the subcommands', () => {
 
                 return stdoutOf(['--help']).should
-                    .have.string('some-sub-action').and
-                    .have.string('another-cool-action').and
-                    .have.string('bad-action');
+                    .have.string('do-something').and
+                    .have.string('do-something-else').and
+                    .have.string('fail');
             });
         });
 
@@ -149,28 +182,28 @@ describe('Shipment', () => {
         it('should expose the actions as functions on the returned object', () => {
 
             let api = shipment.api();
-            api.someSubAction.should.be.a('function');
-            api.anotherCoolAction.should.be.a('function');
+            api.doSomething.should.be.a('function');
+            api.doSomethingElse.should.be.a('function');
         });
 
         it('should invoke the correct action runners upon calling the corresponding function on the api object', () => {
 
             actionSpy.should.not.have.been.called;
-            return shipment.api().anotherCoolAction().then(() => {
+            return shipment.api().doSomethingElse().then(() => {
                 actionSpy.should.have.been.calledOnce;
                 let action = actionSpy.firstCall.args[0];
-                action.getName().should.equal('another-cool-action');
+                action.getName().should.equal('do-something-else');
             });
         });
 
         it('should return a promise for the return value of the action', () => {
 
-            shipment.api().returnValueAction().should.eventually.equal('some return value');
+            shipment.api().returnValue().should.eventually.equal('some return value');
         });
 
         it('should reject if the action throws', () => {
 
-            shipment.api().badAction().should.be.rejected;
+            shipment.api().fail().should.be.rejected;
         });
     });
 
@@ -195,7 +228,7 @@ describe('Shipment', () => {
         it('should 200 OK for existing methods', done => {
 
             request(server)
-                .post('/some-sub-action')
+                .post('/do-something')
                 .expect(200, done);
         });
 
@@ -209,16 +242,32 @@ describe('Shipment', () => {
         it('should take input arguments', done => {
 
             request(server)
-                .post('/to-upper-action')
-                .send({message: 'very very cool message'})
+                .post('/to-upper')
+                .send({args: {message: 'very very cool message'}})
                 .expect(/VERY VERY COOL MESSAGE/, done);
         });
 
         it('should print an error when one occurs', done => {
 
             request(server)
-                .post('/bad-action')
+                .post('/fail')
                 .expect(/something went awfully wrong/, done);
         });
+
+        it('should explicitly indicate success', done => {
+
+            request(server)
+                .post('/do-something')
+                .expect(/SHIPMENT: ok/, done);
+        });
+
+        it('should explicitly indicate failure', done => {
+
+            request(server)
+                .post('/fail')
+                .expect(/SHIPMENT: error: something went awfully wrong/, done);
+        });
+
+        // TODO add verifyKey tests
     });
 });
