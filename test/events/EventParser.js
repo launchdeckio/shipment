@@ -5,7 +5,7 @@ const sinon = require('sinon');
 const EventParser   = require('./../../lib/events/EventParser');
 const ParserContext = require('./../../lib/events/ParseContext');
 
-require('./../support');
+require('./../support/index');
 
 describe('EventParser', () => {
 
