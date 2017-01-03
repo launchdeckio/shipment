@@ -31,7 +31,6 @@
     "defa": "^1.0.0",
     "event-stream": "^3.3.4",
     "express": "^4.14.0",
-    "functionify": "^1.0.4",
     "immutable": "^3.8.1",
     "lodash": "^4.17.4",
     "morgan": "^1.7.0",
