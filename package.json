@@ -1,6 +1,6 @@
 {
   "name": "shipment",
-  "version": "8.1.0",
+  "version": "8.2.0",
   "description": "Run asynchronous actions and report realtime events through auto-generated CLI, node module API, or HTTP API.",
   "main": "lib/Shipment.js",
   "engines": {
