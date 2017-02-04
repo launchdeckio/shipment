@@ -4,6 +4,7 @@ require('./support');
 
 const sinon = require('sinon');
 
+const BaseAction      = require('./../lib/Action');
 const transformAction = require('./../lib/transformAction');
 
 describe('transformAction', () => {
@@ -34,5 +35,19 @@ describe('transformAction', () => {
 
             callSpy.should.have.been.calledWith(sinon.match.any, sinon.match({very: 'coolStuff'}))
         });
-    })
+    });
+
+    it('should allow declaration of a custom base class', () => {
+
+        const CustomBase = class CustomBase extends BaseAction {
+        };
+
+        const customAction = args => {
+        };
+        customAction.base  = CustomBase;
+
+        const action = transformAction(customAction);
+
+        (action instanceof CustomBase).should.be.true;
+    });
 });
