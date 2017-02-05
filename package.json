@@ -33,7 +33,7 @@
     "express": "^4.14.0",
     "immutable": "^3.8.1",
     "lodash": "^4.17.4",
-    "morgan": "^1.7.0",
+    "morgan": "^1.8.0",
     "newline-json": "^0.1.1",
     "pkginfo": "^0.4.0",
     "sprintf-js": "^1.0.3",
@@ -55,6 +55,6 @@
     "sinon": "^1.17.7",
     "sinon-as-promised": "^4.0.2",
     "sinon-chai": "^2.8.0",
-    "supertest": "^2.0.1"
+    "supertest": "^3.0.0"
   }
 }
