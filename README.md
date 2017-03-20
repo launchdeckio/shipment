@@ -1,6 +1,6 @@
 # shipment
 
-> Run asynchronous actions and report realtime events through auto-generated CLI, node module API, or HTTP API. Edit
+> Realtime actions with hierarchical event logs
 
 [![Build Status][travis-image]][travis-url]
 [![Code Quality][codeclimate-image]][codeclimate-url]
