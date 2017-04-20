@@ -3,7 +3,6 @@
 const _               = require('lodash');
 const path            = require('path');
 const sinon           = require('sinon');
-const sinonAsPromised = require('sinon-as-promised');
 const sprintf         = require('sprintf-js').sprintf;
 const Promise         = require('bluebird');
 
