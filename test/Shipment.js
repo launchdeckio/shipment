@@ -276,45 +276,4 @@ describe('Shipment', () => {
         // TODO add verifyKey tests
     });
 
-    describe('serve (encrypted)', () => {
-
-        let server;
-
-        beforeEach(() => {
-
-            server = shipment.serve({encrypt: true});
-        });
-
-        afterEach(cb => {
-
-            server.close(cb);
-        });
-
-        it('should provide an encryption key', () => {
-            return request(server)
-                .get('/')
-                .expect(200)
-                .then(response => {
-                    // response.body.should.contain.keys('encrypted', 'key');
-                    response.body.encrypted.should.be.true;
-                    response.body.key.should.be.a('string')
-                });
-        });
-
-        it('should decrypt the encrypted payload and process it', () => {
-            return request(server).get('/')
-                .then(response => {
-                    const key     = ursa.createPublicKey(response.body.key);
-                    const payload = {
-                        encrypted: key.encrypt(JSON.stringify({
-                            args: {message: 'very secret message!'},
-                        }), 'utf8', 'base64'),
-                    };
-                    return request(server)
-                        .post('/to-upper')
-                        .send(payload)
-                        .expect(/VERY SECRET MESSAGE/);
-                });
-        });
-    });
 });
