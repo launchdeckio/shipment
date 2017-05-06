@@ -12,7 +12,6 @@ const Bluebird = require('bluebird');
 const execa    = require('execa');
 const path     = require('path');
 const request  = require('supertest');
-const ursa     = require('ursa');
 
 describe('Shipment', () => {
 
