@@ -91,13 +91,17 @@ describe('Action', () => {
             customContextSpy.should.have.been.calledWith(sinon.match({foo: 'bar', cli: true}));
         });
 
-        _.each([true, false], cli => {
-            it(sprintf('should assign the cli property %s', cli ? 'true' : 'false'), () => {
-                customContextSpy.reset();
-                customContextSubAction.makeContext({}, cli);
-                customContextSpy.firstCall.args.should.have.deep.property('[0].cli', cli);
-            });
-        })
+        it(sprintf('should assign the cli property false'), () => {
+            customContextSpy.reset();
+            customContextSubAction.makeContext({}, false);
+            customContextSpy.firstCall.args[0].should.have.property('cli', false);
+        });
+
+        it(sprintf('should assign the cli property true'), () => {
+            customContextSpy.reset();
+            customContextSubAction.makeContext({}, true);
+            customContextSpy.firstCall.args[0].should.have.property('cli', true);
+        });
     });
 
     describe('onSuccess', () => {
