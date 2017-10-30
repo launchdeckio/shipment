@@ -4,7 +4,7 @@
   "description": "Run asynchronous actions and report realtime events through auto-generated CLI, node module API, or HTTP API.",
   "main": "lib/Shipment.js",
   "engines": {
-    "node": ">=6"
+    "node": ">=7.6"
   },
   "scripts": {
     "pretest": "eslint lib",
