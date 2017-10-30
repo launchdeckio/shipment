@@ -5,7 +5,7 @@ const Action   = require('./../lib/Action');
 
 require('./support/index');
 
-const testShipment = require('./fixtures/testShipment');
+const testShipment = require('./support/fixtures/testShipment');
 
 const sinon    = require('sinon');
 const Bluebird = require('bluebird');
@@ -22,7 +22,7 @@ describe('Shipment', () => {
      * @returns {Function}
      */
     const resultOf = (args, allowError = false) => {
-        let promise = execa('node', [path.join(__dirname, 'fixtures/testCli.js')].concat(args));
+        let promise = execa('node', [path.join(__dirname, 'support/fixtures/testCli.js')].concat(args));
         if (allowError) promise = promise.catch(error => error);
         return promise;
     };
@@ -56,7 +56,7 @@ describe('Shipment', () => {
                 someAction:  () => null,
                 otherAction: class NotTheSameName extends Action {
 
-                             }
+                }
             });
 
             shipment[0].getName().should.equal('some-action');
@@ -224,52 +224,66 @@ describe('Shipment', () => {
             server = shipment.serve();
         });
 
-        afterEach(cb => {
+        // afterEach(cb => {
+        // server.close(cb);
+        // });
 
-            server.close(cb);
-        });
+        // const closeCb = (server, done) => () => server.close(done);
+        const close = () => new Promise(resolve => server.close(resolve));
 
-        it('should 200 OK for existing methods', done => {
+        it('should 200 OK for existing methods', async () => {
 
-            request(server)
+            await request(server)
                 .post('/do-something')
-                .expect(200, done);
+                .expect(200);
+
+            await close();
         });
 
-        it('should 404 on non-existing methods', done => {
+        it('should 404 on non-existing methods', async () => {
 
-            request(server)
+            await request(server)
                 .post('/some-non-existent-method')
-                .expect(404, done);
+                .expect(404);
+
+            await close();
         });
 
-        it('should take input arguments', done => {
+        it('should take input arguments', async () => {
 
-            request(server)
+            await request(server)
                 .post('/to-upper')
                 .send({args: {message: 'very very cool message'}})
-                .expect(/VERY VERY COOL MESSAGE/, done);
+                .expect(/VERY VERY COOL MESSAGE/);
+
+            await close();
         });
 
-        it('should print an error when one occurs', done => {
+        it('should print an error when one occurs', async () => {
 
-            request(server)
+            await request(server)
                 .post('/fail')
-                .expect(/something went awfully wrong/, done);
+                .expect(/something went awfully wrong/);
+
+            await close();
         });
 
-        it('should explicitly indicate success', done => {
+        it('should explicitly indicate success', async () => {
 
-            request(server)
+            await request(server)
                 .post('/do-something')
-                .expect(/SHIPMENT: ok/, done);
+                .expect(/SHIPMENT: ok/);
+
+            await close();
         });
 
-        it('should explicitly indicate failure', done => {
+        it('should explicitly indicate failure', async () => {
 
-            request(server)
+            await request(server)
                 .post('/fail')
-                .expect(/SHIPMENT: error: something went awfully wrong/, done);
+                .expect(/SHIPMENT: error: something went awfully wrong/);
+
+            await close();
         });
 
         // TODO add verifyKey tests

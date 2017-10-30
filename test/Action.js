@@ -1,10 +1,10 @@
 'use strict';
 
-const _               = require('lodash');
-const path            = require('path');
-const sinon           = require('sinon');
-const sprintf         = require('sprintf-js').sprintf;
-const Promise         = require('bluebird');
+const _       = require('lodash');
+const path    = require('path');
+const sinon   = require('sinon');
+const sprintf = require('sprintf-js').sprintf;
+const Promise = require('bluebird');
 
 require('./support/index');
 
@@ -170,8 +170,8 @@ describe('Action', () => {
 
         it('should invoke beforeRun, run, afterRun in order', () => {
             _.forEach(['beforeRun', 'afterRun'], fn => sinon.spy(action, fn));
-            sinon.stub(action, 'run', () => Promise.delay(10));
-            sinon.stub(action, 'parseArgs', args => {
+            sinon.stub(action, 'run').callsFake(() => Promise.delay(10));
+            sinon.stub(action, 'parseArgs').callsFake(args => {
                 return {foofoo: args.foo};
             });
             mockContext.emit = {runAction: sinon.spy(), result: sinon.spy(), done: sinon.spy()};
@@ -195,7 +195,7 @@ describe('Action', () => {
 
         it('should invoke execute', () => {
 
-            sinon.stub(action, 'execute', () => sinon.stub().resolves());
+            sinon.stub(action, 'execute').returns(sinon.stub().resolves());
             return action.executeCli({some: 'arg'}).then(() => {
                 action.execute.should.have.been.calledWith(mockContext, sinon.match({some: 'arg'}));
             });

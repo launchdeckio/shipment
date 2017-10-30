@@ -2,8 +2,8 @@
 
 'use strict';
 
-const Shipment = require('./../../lib/Shipment');
-const Action   = require('./../../lib/Action');
+const Shipment = require('../../../lib/Shipment');
+const Action   = require('../../../lib/Action');
 const Promise  = require('bluebird');
 
 const functionify = require('functionify');
@@ -72,7 +72,7 @@ let testCli = spy => {
         ToUpperAction,
         ReturnValueAction,
         PassArgsAction
-    ], {pkg: require('./../../lib/pkginfo')});
+    ], {pkg: require('../../../lib/pkginfo')});
 };
 
 if (require.main === module) {

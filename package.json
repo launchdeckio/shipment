@@ -8,7 +8,7 @@
   },
   "scripts": {
     "pretest": "eslint lib",
-    "test": "mocha --recursive -R spec",
+    "test": "mocha --recursive -R spec \"./test/{,!(support)/**/}*.js\"",
     "test-coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- --recursive && opn coverage/lcov-report/index.html"
   },
   "repository": {
@@ -25,35 +25,35 @@
   "license": "MIT",
   "dependencies": {
     "arrify": "^1.0.1",
-    "bluebird": "^3.4.7",
-    "body-parser": "^1.17.2",
-    "chalk": "^2.0.1",
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.18.2",
+    "chalk": "^2.3.0",
     "defa": "^1.0.0",
     "event-stream": "^3.3.4",
-    "express": "^4.15.3",
-    "immutable": "^3.8.1",
+    "express": "^4.16.2",
+    "immutable": "^3.8.2",
     "lodash": "^4.17.4",
-    "morgan": "^1.8.2",
+    "morgan": "^1.9.0",
     "newline-json": "^0.1.1",
-    "pkginfo": "^0.4.0",
+    "pkginfo": "^0.4.1",
     "sprintf-js": "^1.1.1",
     "stream-line-wrapper": "^0.1.1",
     "update-notifier": "^2.2.0",
     "uuid": "^3.1.0",
-    "yargs": "^8.0.2"
+    "yargs": "^10.0.3"
   },
   "devDependencies": {
-    "chai": "^4.1.0",
+    "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
-    "coveralls": "^2.11.15",
-    "eslint": "^4.2.0",
-    "execa": "^0.7.0",
+    "coveralls": "^3.0.0",
+    "eslint": "^4.10.0",
+    "execa": "^0.8.0",
     "functionify": "^1.0.4",
     "istanbul": "^0.4.5",
-    "mocha": "^3.4.2",
+    "mocha": "^4.0.1",
     "opn-cli": "^3.1.0",
-    "sinon": "^2.3.8",
-    "sinon-chai": "^2.12.0",
+    "sinon": "^4.0.2",
+    "sinon-chai": "^2.14.0",
     "supertest": "^3.0.0"
   }
 }

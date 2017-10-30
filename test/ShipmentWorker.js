@@ -5,8 +5,8 @@ require('./support/index');
 const ShipmentWorker = require('./../lib/ShipmentWorker');
 const Shipment       = require('./../lib/Shipment');
 
-const exporter    = __dirname + '/fixtures/testShipmentExporter.js';
-const badExporter = __dirname + '/fixtures/testServer.js';
+const exporter    = __dirname + '/support/fixtures/testShipmentExporter.js';
+const badExporter = __dirname + '/support/fixtures/testServer.js';
 
 describe('ShipmentWorker', function () {
 
