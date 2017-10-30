@@ -3,13 +3,12 @@ language: node_js
 notifications:
   email: false
 node_js:
-  - 6
   - 'stable'
 before_script:
   - npm install -g istanbul
   - npm run-script pretest
   - npm link
 script:
-  - istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- --recursive
+  - istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- --recursive \"./test/{,!(support)/**/}*.js\"
 after_script:
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js

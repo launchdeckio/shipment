@@ -9,7 +9,7 @@
   "scripts": {
     "pretest": "eslint lib",
     "test": "mocha --recursive -R spec \"./test/{,!(support)/**/}*.js\"",
-    "test-coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- --recursive && opn coverage/lcov-report/index.html"
+    "test-coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- --recursive \"./test/{,!(support)/**/}*.js\" && opn coverage/lcov-report/index.html"
   },
   "repository": {
     "type": "git",
