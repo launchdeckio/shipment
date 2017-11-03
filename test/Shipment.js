@@ -215,20 +215,13 @@ describe('Shipment', () => {
      * High level server tests
      * Low-level (e.g. route creation) should go in ShipmentServer suite
      */
-    describe('serve', () => {
+    describe('server (using fork)', () => {
 
         let server;
-
         beforeEach(() => {
-
             server = shipment.serve();
         });
 
-        // afterEach(cb => {
-        // server.close(cb);
-        // });
-
-        // const closeCb = (server, done) => () => server.close(done);
         const close = () => new Promise(resolve => server.close(resolve));
 
         it('should 200 OK for existing methods', async () => {
@@ -289,4 +282,23 @@ describe('Shipment', () => {
         // TODO add verifyKey tests
     });
 
+    describe('server (using API)', () => {
+        let server;
+
+        beforeEach(() => {
+            server = shipment.serve({useFork: false});
+        });
+
+        const close = () => new Promise(resolve => server.close(resolve));
+
+        it('should take input arguments', async () => {
+
+            await request(server)
+                .post('/to-upper')
+                .send({args: {message: 'very very cool message'}})
+                .expect(/VERY VERY COOL MESSAGE/);
+
+            await close();
+        });
+    });
 });

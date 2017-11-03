@@ -38,6 +38,7 @@
     "pkginfo": "^0.4.1",
     "sprintf-js": "^1.1.1",
     "stream-line-wrapper": "^0.1.1",
+    "through2": "^2.0.3",
     "update-notifier": "^2.2.0",
     "uuid": "^3.1.0",
     "yargs": "^10.0.3"
