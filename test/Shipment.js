@@ -12,6 +12,7 @@ const Bluebird = require('bluebird');
 const execa    = require('execa');
 const path     = require('path');
 const request  = require('supertest');
+const delay    = require('delay');
 
 describe('Shipment', () => {
 
@@ -222,7 +223,10 @@ describe('Shipment', () => {
             server = shipment.serve();
         });
 
-        const close = () => new Promise(resolve => server.close(resolve));
+        const close = async () => {
+            await new Promise(resolve => server.close(resolve));
+            await delay(50);
+        };
 
         it('should 200 OK for existing methods', async () => {
 
