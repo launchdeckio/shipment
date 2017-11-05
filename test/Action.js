@@ -4,7 +4,7 @@ const _       = require('lodash');
 const path    = require('path');
 const sinon   = require('sinon');
 const sprintf = require('sprintf-js').sprintf;
-const Promise = require('bluebird');
+const delay   = require('delay');
 
 require('./support/index');
 
@@ -170,7 +170,7 @@ describe('Action', () => {
 
         it('should invoke beforeRun, run, afterRun in order', () => {
             _.forEach(['beforeRun', 'afterRun'], fn => sinon.spy(action, fn));
-            sinon.stub(action, 'run').callsFake(() => Promise.delay(10));
+            sinon.stub(action, 'run').callsFake(() => delay(10));
             sinon.stub(action, 'parseArgs').callsFake(args => {
                 return {foofoo: args.foo};
             });
@@ -278,7 +278,7 @@ describe('Action', () => {
             (subAction).register(yargs, 0);
             subActionSpy.should.not.have.been.called;
             yargs.parse('cool-stuff');
-            return Promise.delay(20).then(() => {
+            return delay(20).then(() => {
                 // Because the actions are ran via Promises that cannot be intercepted when calling yargs.parse
                 subActionSpy.should.have.been.calledOnce;
             });

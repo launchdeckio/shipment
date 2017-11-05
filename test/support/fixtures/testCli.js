@@ -4,7 +4,7 @@
 
 const Shipment = require('../../../lib/Shipment');
 const Action   = require('../../../lib/Action');
-const Promise  = require('bluebird');
+const delay    = require('delay');
 
 const functionify = require('functionify');
 
@@ -51,12 +51,12 @@ let testCli = spy => {
     };
     const ReturnValueAction = class ReturnValueAction extends Action {
         run(context, options) {
-            return Promise.delay(20).then(() => 'some return value');
+            return delay(20).then(() => 'some return value');
         }
     };
     const PassArgsAction    = class PassArgsAction extends Action {
         run(context, options) {
-            return Promise.delay(1000).then(() => {
+            return delay(1000).then(() => {
                 console.log('Hoi');
             });
         }

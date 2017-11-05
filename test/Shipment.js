@@ -7,12 +7,11 @@ require('./support/index');
 
 const testShipment = require('./support/fixtures/testShipment');
 
-const sinon    = require('sinon');
-const Bluebird = require('bluebird');
-const execa    = require('execa');
-const path     = require('path');
-const request  = require('supertest');
-const delay    = require('delay');
+const sinon   = require('sinon');
+const delay   = require('delay');
+const execa   = require('execa');
+const path    = require('path');
+const request = require('supertest');
 
 describe('Shipment', () => {
 
@@ -103,7 +102,7 @@ describe('Shipment', () => {
 
             // Because there is no way to intercept the control flow when issuing subcommands via yargs
             // Could also use an eventemitter architecture
-            return Bluebird.delay(20).then(() => {
+            return delay(20).then(() => {
 
                 actionSpy.should.have.been.calledOnce;
                 let action = actionSpy.firstCall.args[0];
