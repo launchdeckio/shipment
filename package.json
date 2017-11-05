@@ -39,7 +39,7 @@
     "sprintf-js": "^1.1.1",
     "stream-line-wrapper": "^0.1.1",
     "through2": "^2.0.3",
-    "update-notifier": "^2.2.0",
+    "update-notifier": "^2.3.0",
     "uuid": "^3.1.0",
     "yargs": "^10.0.3"
   },
@@ -53,7 +53,7 @@
     "istanbul": "^0.4.5",
     "mocha": "^4.0.1",
     "opn-cli": "^3.1.0",
-    "sinon": "^4.0.2",
+    "sinon": "^4.1.1",
     "sinon-chai": "^2.14.0",
     "supertest": "^3.0.0"
   }
