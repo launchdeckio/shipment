@@ -18,9 +18,9 @@ describe('transformAction', () => {
 
         let action = transformAction(anonymousAction);
 
-        action.getName().should.equal('i-am-anonymous');
+        action.name.should.equal('i-am-anonymous');
 
-        action.getDescription().should.equal('Some anonymous action');
+        action.description.should.equal('Some anonymous action');
     });
 
     it('should invoke the anonymous function as if it were the run method of the action', () => {

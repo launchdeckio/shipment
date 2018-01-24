@@ -2,7 +2,7 @@
 
 require('./support/index');
 
-const ShipmentWorker = require('./../lib/ShipmentWorker');
+const ShipmentWorker = require('../lib/http/ShipmentWorker');
 const Shipment       = require('./../lib/Shipment');
 
 const exporter    = __dirname + '/support/fixtures/testShipmentExporter.js';

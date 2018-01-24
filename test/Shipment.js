@@ -107,7 +107,7 @@ describe('Shipment', () => {
                 actionSpy.should.have.been.calledOnce;
                 let action = actionSpy.firstCall.args[0];
                 action.should.be.an.instanceOf(Action);
-                action.getName().should.equal('do-something');
+                action.name.should.equal('do-something');
             });
         });
 
@@ -196,7 +196,7 @@ describe('Shipment', () => {
             return shipment.api().doSomethingElse().then(() => {
                 actionSpy.should.have.been.calledOnce;
                 let action = actionSpy.firstCall.args[0];
-                action.getName().should.equal('do-something-else');
+                action.name.should.equal('do-something-else');
             });
         });
 

@@ -1,14 +1,17 @@
 module.exports = {
-    "env": {
-        "es6": true,
+    "env":           {
+        "es6":  true,
         "node": true
     },
     "parserOptions": {
-        "ecmaVersion": 2017,
+        "ecmaVersion":  2017,
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true
+        },
     },
-    "extends": "eslint:recommended",
-    "rules": {
-        "indent": [
+    "extends":       "eslint:recommended",
+    "rules":         {
+        "indent":          [
             "error",
             4
         ],
@@ -16,11 +19,11 @@ module.exports = {
             "error",
             "unix"
         ],
-        "quotes": [
+        "quotes":          [
             "error",
             "single"
         ],
-        "semi": [
+        "semi":            [
             "error",
             "always"
         ]

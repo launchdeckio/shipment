@@ -69,7 +69,7 @@ describe('Action', () => {
 
         it('should derive the action name from the class name by default', () => {
 
-            subAction.getName().should.equal('cool-stuff');
+            subaction.name.should.equal('cool-stuff');
         });
     });
 
@@ -87,19 +87,19 @@ describe('Action', () => {
 
         it('should call the Context constructor with the return value of parseContextArgs', () => {
 
-            customContextSubAction.makeContext({}, true);
+            customContextSubAction.makeContext({});
             customContextSpy.should.have.been.calledWith(sinon.match({foo: 'bar', cli: true}));
         });
 
         it(sprintf('should assign the cli property false'), () => {
             customContextSpy.reset();
-            customContextSubAction.makeContext({}, false);
+            customContextSubAction.makeContext({});
             customContextSpy.firstCall.args[0].should.have.property('cli', false);
         });
 
         it(sprintf('should assign the cli property true'), () => {
             customContextSpy.reset();
-            customContextSubAction.makeContext({}, true);
+            customContextSubAction.makeContext({});
             customContextSpy.firstCall.args[0].should.have.property('cli', true);
         });
     });

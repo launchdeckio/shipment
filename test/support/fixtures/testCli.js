@@ -72,7 +72,7 @@ let testCli = spy => {
         ToUpperAction,
         ReturnValueAction,
         PassArgsAction
-    ], {pkg: require('../../../lib/pkginfo')});
+    ]);
 };
 
 if (require.main === module) {

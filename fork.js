@@ -1,7 +1,7 @@
 'use strict';
 
-const ShipmentWorker      = require('./lib/ShipmentWorker');
-const withServerLifecycle = require('./lib/routines/withServerLifecycle');
+const ShipmentWorker      = require('./lib/http/ShipmentWorker');
+const withServerLifecycle = require('./lib/http/withServerLifecycle');
 
 process.on('message', async ({exportPath, action, args, verifyKey = ''}) => {
     try {
@@ -15,4 +15,4 @@ process.on('message', async ({exportPath, action, args, verifyKey = ''}) => {
     process.exit();
 });
 
-console.log('shipment worker running...');
+process.stdout.write('shipment worker running...\n');
