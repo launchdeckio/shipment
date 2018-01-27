@@ -2,7 +2,7 @@
   "name": "shipment",
   "version": "11.0.0-6",
   "description": "Define-once, run-everywhere asynchronous actions and report realtime through CLI, API, HTTP or WS.",
-  "main": "lib/Shipment.js",
+  "main": "index.js",
   "engines": {
     "node": ">=8"
   },
