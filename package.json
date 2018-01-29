@@ -7,7 +7,7 @@
     "node": ">=8"
   },
   "scripts": {
-    "pretest": "eslint lib ; exit 0"
+    "pretest": "eslint lib"
   },
   "repository": {
     "type": "git",
@@ -24,7 +24,6 @@
   "dependencies": {
     "ava": "^0.25.0",
     "body-parser": "^1.18.2",
-    "delay": "^2.0.0",
     "express": "^4.16.2",
     "lodash": "^4.17.4",
     "morgan": "^1.9.0",
