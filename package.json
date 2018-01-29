@@ -26,7 +26,6 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "chalk": "^2.3.0",
-    "defa": "^1.0.0",
     "delay": "^2.0.0",
     "express": "^4.16.2",
     "lodash": "^4.17.4",
