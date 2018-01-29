@@ -1,8 +1,22 @@
-module.exports = require('./lib/Shipment');
+const Shipment   = require('./lib/Shipment');
+const Parser     = require('./lib/parse/Parser');
+const ApiWrapper = require('./lib/ApiWrapper');
+const HttpServer = require('./lib/http/HttpServer');
 
-module.exports.Parser = require('./lib/parse/Parser');
+const events = require('./lib/events');
 
-module.exports.ApiWrapper = require('./lib/api/ApiWrapper');
-module.exports.HttpServer = require('./lib/http/HttpServer');
+const n = actions => new Shipment(actions);
 
-module.exports.events = require('./lib/events');
+module.exports = {
+
+    Shipment,
+    Parser,
+    ApiWrapper,
+    HttpServer,
+
+    events,
+
+    api: actions => new ApiWrapper(n(actions)).proxy,
+
+    http: (actions, options) => new HttpServer(n(actions), options),
+};

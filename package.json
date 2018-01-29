@@ -7,7 +7,8 @@
     "node": ">=8"
   },
   "scripts": {
-    "pretest": "eslint lib"
+    "pretest": "eslint lib",
+    "test": "ava"
   },
   "repository": {
     "type": "git",
@@ -27,7 +28,9 @@
     "express": "^4.16.2",
     "lodash": "^4.17.4",
     "morgan": "^1.9.0",
+    "sinon": "^4.2.2",
     "stream-line-wrapper": "^0.1.1",
+    "supertest": "^3.0.0",
     "through2": "^2.0.3"
   },
   "devDependencies": {
