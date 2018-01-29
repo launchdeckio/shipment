@@ -1,4 +1,5 @@
 const Shipment   = require('./lib/Shipment');
+const Context    = require('./lib/Context');
 const Parser     = require('./lib/parse/Parser');
 const ApiWrapper = require('./lib/ApiWrapper');
 const HttpServer = require('./lib/http/HttpServer');
@@ -10,6 +11,7 @@ const n = actions => new Shipment(actions);
 module.exports = {
 
     Shipment,
+    Context,
     Parser,
     ApiWrapper,
     HttpServer,
