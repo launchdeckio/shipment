@@ -11,5 +11,3 @@ module.exports = Shipment;
 module.exports.makeApi  = makeApi;
 module.exports.events   = events;
 module.exports.receiver = receiver;
-
-
