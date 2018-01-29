@@ -1,6 +1,6 @@
 # shipment
 
-> Realtime actions with hierarchical event logs
+> Define-once, run-everywhere realtime operations framework
 
 [![Build Status][travis-image]][travis-url]
 [![Code Quality][codeclimate-image]][codeclimate-url]
@@ -10,55 +10,33 @@
 ### Install
 
 ```bash
-$ npm install shipment
+$ npm install shipment@next
 ```
 
 ### Usage
 
-#### Define an action
-
 ```js
-// actions/ToUpper.js
-
-const BaseAction = require('shipment').Action;
-
-module.exports = class ToUpper extends BaseAction {
-
-    run(context, options) {
-        return options.message.toUpperCase();
-    }
-}
-```
-
-or, even shorter,
-
-```js
-module.exports = (context, options) => options.message.toUpperCase();
-```
-
-#### Expose a CLI, HTTP server or API!
-
-```js
-#!/usr/bin/env node
-// my-module.js
-
 const Shipment = require('shipment');
 
-const shipment = new Shipment([
-  require('./actions/ToUpper.js')
-]);
+const {Cli, HttpServer, ApiWrapper} = Shipment;
+
+const shipment = new Shipment({
+    toUpper({args: {message}}) {
+        return message.toUpperCase();
+    },
+});
 
 // Expose a CLI
-shipment.cli();
-// $ my-module.js to-upper --message bar
+new Cli(shipment.cli()).run();
+// $ node ./my-module.js to-upper --message bar
 
-// Or expose an HTTP server!
-shipment.serve();
+// Or expose an HTTP server
+new HttpServer(shipment).listen();
 // $ curl -X POST -d '{"message": "bar"}' http://localhost:6565/to-upper
 
 // Or simply a Node.js module
-module.exports = shipment.api();
-// require('./my-module.js').toUpper({message: "bar"}).then(console.log);
+module.exports = new ApiWrapper(shipment).proxy;
+// console.log(require('./my-module.js').toUpper({message: "bar"}));
 ```
 
 ## License

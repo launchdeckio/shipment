@@ -1,15 +1,13 @@
 {
   "name": "shipment",
   "version": "11.0.0-6",
-  "description": "Define-once, run-everywhere asynchronous actions and report realtime through CLI, API, HTTP or WS.",
+  "description": "Define-once, run-everywhere realtime operations framework",
   "main": "index.js",
   "engines": {
     "node": ">=8"
   },
   "scripts": {
-    "pretest": "eslint lib ; exit 0",
-    "test": "mocha --recursive -R spec \"./test/{,!(support)/**/}*.js\"",
-    "test-coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- --recursive \"./test/{,!(support)/**/}*.js\" && opn coverage/lcov-report/index.html"
+    "pretest": "eslint lib ; exit 0"
   },
   "repository": {
     "type": "git",
@@ -24,29 +22,16 @@
   "author": "JM Versteeg",
   "license": "MIT",
   "dependencies": {
+    "ava": "^0.25.0",
     "body-parser": "^1.18.2",
-    "chalk": "^2.3.0",
     "delay": "^2.0.0",
     "express": "^4.16.2",
     "lodash": "^4.17.4",
     "morgan": "^1.9.0",
-    "socket.io": "^2.0.4",
-    "sprintf-js": "^1.1.1",
     "stream-line-wrapper": "^0.1.1",
-    "through2": "^2.0.3",
-    "yargs": "^11.0.0"
+    "through2": "^2.0.3"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "chai-as-promised": "^7.1.1",
-    "coveralls": "^3.0.0",
-    "eslint": "^4.16.0",
-    "execa": "^0.9.0",
-    "istanbul": "^0.4.5",
-    "mocha": "^5.0.0",
-    "opn-cli": "^3.1.0",
-    "sinon": "^4.2.2",
-    "sinon-chai": "^2.14.0",
-    "supertest": "^3.0.0"
+    "eslint": "^4.16.0"
   }
 }
