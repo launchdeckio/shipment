@@ -21,3 +21,7 @@ test('constructor prevents wrapper one instance inside of another', t => {
     const b = new Shipment(a);
     t.true(b.actions.someAction instanceof Action);
 });
+
+test('catch error', t => {
+
+});

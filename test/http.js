@@ -10,11 +10,20 @@ test('http', async t => {
     const {app} = http(actions);
 
     await request(app)
-        .post('/customEvent')
+        .post('/toUpper')
         .send({message: 'hi'})
-        .expect(/SHIPMENT: start: customEvent/)
-        .expect(/fooEvent/)
+        .expect(/SHIPMENT: start/)
+        .expect(/HI/)
         .expect(/SHIPMENT: ok/);
 
+    await request(app)
+        .get('/customEvent')
+        .expect(/fooEvent/);
+
+    await request(app)
+        .post('/nonExistent')
+        .expect(404);
+
     t.pass();
+
 });
