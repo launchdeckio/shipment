@@ -6,5 +6,9 @@ module.exports = {
 
     customEvent({emit}) {
         emit({fooEvent: 'foobar'});
-    }
+    },
+
+    error() {
+        throw new Error('something went wrong!');
+    },
 };
