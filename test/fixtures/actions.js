@@ -1,9 +1,7 @@
 module.exports = {
 
-    ['to-upper'](context) {
-        // const message = context.args.message;
-        // console.log(context.args.message.toUpperCase());
-        return context.args.message.toUpperCase();
+    toUpper({args}) {
+        return args.message.toUpperCase();
     },
 
     customEvent({emit}) {
