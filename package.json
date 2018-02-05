@@ -23,18 +23,18 @@
   "author": "JM Versteeg",
   "license": "MIT",
   "dependencies": {
-    "ava": "^0.25.0",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "lodash": "^4.17.5",
     "morgan": "^1.9.0",
-    "sinon": "^4.2.2",
     "stream-line-wrapper": "^0.1.1",
-    "supertest": "^3.0.0",
     "through2": "^2.0.3",
     "yargs": "^11.0.0"
   },
   "devDependencies": {
+    "ava": "^0.25.0",
+    "sinon": "^4.2.2",
+    "supertest": "^3.0.0",
     "eslint": "^4.17.0",
     "stream-buffers": "^3.0.1"
   }
