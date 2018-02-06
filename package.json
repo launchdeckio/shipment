@@ -1,6 +1,6 @@
 {
   "name": "shipment",
-  "version": "12.0.0-1",
+  "version": "12.0.0-2",
   "description": "Define-once, run-everywhere realtime operations framework",
   "main": "index.js",
   "engines": {
