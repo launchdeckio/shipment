@@ -1,7 +1,7 @@
 module.exports = {
 
-    toUpper({args}) {
-        return args.message.toUpperCase();
+    toUpper({args: {message = ''}}) {
+        return message.toUpperCase();
     },
 
     customEvent({emit}) {
