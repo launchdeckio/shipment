@@ -27,6 +27,7 @@
     "express": "^4.16.2",
     "lodash": "^4.17.5",
     "morgan": "^1.9.0",
+    "serialize-error": "^2.1.0",
     "stream-line-wrapper": "^0.1.1",
     "through2": "^2.0.3",
     "yargs": "^11.0.0"
