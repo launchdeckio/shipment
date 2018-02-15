@@ -12,13 +12,15 @@ test('http', async t => {
     await request(app)
         .post('/toUpper')
         .send({message: 'hi'})
-        .expect(/SHIPMENT: start/)
-        .expect(/HI/)
-        .expect(/SHIPMENT: ok/);
+        .expect(/HI/);
 
     await request(app)
         .get('/customEvent')
         .expect(/fooEvent/);
+
+    await request(app)
+        .get('/error')
+        .expect(/SHIPMENT: error/);
 
     await request(app)
         .post('/nonExistent')
