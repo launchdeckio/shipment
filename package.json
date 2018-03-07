@@ -1,15 +1,14 @@
 {
   "name": "shipment",
-  "version": "11.0.0-6",
-  "description": "Run asynchronous actions and report realtime events through auto-generated CLI, node module API, or HTTP API.",
-  "main": "lib/Shipment.js",
+  "version": "12.0.0-2",
+  "description": "Define-once, run-everywhere realtime operations framework",
+  "main": "index.js",
   "engines": {
     "node": ">=8"
   },
   "scripts": {
-    "pretest": "eslint lib ; exit 0",
-    "test": "mocha --recursive -R spec \"./test/{,!(support)/**/}*.js\"",
-    "test-coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- --recursive \"./test/{,!(support)/**/}*.js\" && opn coverage/lcov-report/index.html"
+    "pretest": "eslint lib",
+    "test": "ava"
   },
   "repository": {
     "type": "git",
@@ -24,37 +23,20 @@
   "author": "JM Versteeg",
   "license": "MIT",
   "dependencies": {
-    "arrify": "^1.0.1",
     "body-parser": "^1.18.2",
-    "chalk": "^2.3.0",
-    "defa": "^1.0.0",
-    "delay": "^2.0.0",
-    "event-stream": "^3.3.4",
     "express": "^4.16.2",
-    "immutable": "^3.8.2",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.5",
     "morgan": "^1.9.0",
-    "newline-json": "^0.1.1",
-    "pkginfo": "^0.4.1",
-    "sprintf-js": "^1.1.1",
+    "serialize-error": "^2.1.0",
     "stream-line-wrapper": "^0.1.1",
     "through2": "^2.0.3",
-    "update-notifier": "^2.3.0",
-    "uuid": "^3.1.0",
-    "yargs": "^10.0.3"
+    "yargs": "^11.0.0"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "chai-as-promised": "^7.1.1",
-    "coveralls": "^3.0.0",
-    "eslint": "^4.14.0",
-    "execa": "^0.8.0",
-    "functionify": "^1.0.4",
-    "istanbul": "^0.4.5",
-    "mocha": "^4.0.1",
-    "opn-cli": "^3.1.0",
-    "sinon": "^4.1.3",
-    "sinon-chai": "^2.14.0",
+    "ava": "^0.25.0",
+    "eslint": "^4.17.0",
+    "sinon": "^4.2.2",
+    "stream-buffers": "^3.0.1",
     "supertest": "^3.0.0"
   }
 }

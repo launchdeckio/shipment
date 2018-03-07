@@ -1,0 +1,7 @@
+TODO
+
+Receiver should automatically derive parent ID
+for newly generated "ReceivedContext" instances
+by removing the latest path element from the ID
+and assign the parent "ReceivedContext" accordingly
+to the newly generated "ReceivedContext"

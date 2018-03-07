@@ -1,55 +1,58 @@
-'use strict';
+import test from 'ava';
+import sinon from 'sinon';
 
-require('./support/index');
+import Context from '../lib/Context';
 
-const Context = require('./../lib/Context');
+test('emits the "begin" event when instantiated', t => {
 
-describe('Context', () => {
+    const receive = sinon.spy();
 
-    let context;
-
-    beforeEach(() => {
-        context = new Context;
+    new Context({
+        receive,
+        scope: {foo: 9000},
     });
 
-    describe('createSubContext', () => {
+    const evt = receive.args[0][0];
 
-        let options, customContext, subContext, internalScope;
+    t.truthy(evt);
 
-        beforeEach(() => {
+    t.deepEqual(evt.begin, {scope: {foo: 9000}});
+});
 
-            options       = {verbosity: 3};
-            internalScope = {base: 'foo'};
-            customContext = new Context(options, internalScope);
-            subContext    = customContext.createSubContext({ext: 'bar'});
-        });
+test('.branch ID assignment', t => {
 
-        it('should not have any side-effects on the initial scope', () => {
+    const a  = new Context({});
+    const b1 = a.branch();
+    const b2 = a.branch();
+    const c  = b2.branch();
+    t.is(b1.id, '0.0');
+    t.is(b2.id, '0.1');
+    t.is(c.id, '0.1.0');
+});
 
-            internalScope.should.deep.equal({base: 'foo'});
-        });
+test('.branch option inheriting', t => {
 
-        it('should create a new context with the given scope', () => {
-
-            subContext.scope.should.deep.equal({ext: 'bar'});
-        });
-
-        it('should set the parent property accordingly', () => {
-
-            subContext.parentId.should.equal(customContext.id);
-        });
-
-        it('should create a new context with a unique ID', () => {
-
-            subContext.id.should.not.equal(customContext.id);
-        });
+    const a = new Context({
+        args: {foo: 9000},
     });
 
-    describe('withScope', () => {
+    const b = a.branch();
 
-        it('should run some function with a subContext that includes the given scope', () => {
+    t.deepEqual(b.args, {foo: 9000});
+});
 
-            new Context({}, {base: 'foo'}).withScope({ext: 'bar'}, context => context.scope.ext).should.equal('bar');
-        });
+test('.branch wrapReceive', t => {
+
+    const aReceive = sinon.spy();
+    const bReceive = sinon.spy();
+
+    const a = new Context({receive: aReceive});
+
+    const b = a.branch({}, receive => event => {
+        bReceive(event);
+        receive(event);
     });
+
+    t.is(aReceive.callCount, 2);
+    t.is(bReceive.callCount, 1);
 });
