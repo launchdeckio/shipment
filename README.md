@@ -3,8 +3,6 @@
 > Define-once, run-everywhere realtime operations framework
 
 [![Build Status][travis-image]][travis-url]
-[![Code Quality][codeclimate-image]][codeclimate-url]
-[![Code Coverage][coveralls-image]][coveralls-url]
 [![NPM Version][npm-image]][npm-url]
 
 ### Install
@@ -49,17 +47,11 @@ MIT © [sgtlambda](http://github.com/sgtlambda)
 [travis-image]: https://img.shields.io/travis/launchdeckio/shipment.svg?style=flat-square
 [travis-url]: https://travis-ci.org/launchdeckio/shipment
 
-[codeclimate-image]: https://img.shields.io/codeclimate/github/launchdeckio/shipment.svg?style=flat-square
-[codeclimate-url]: https://codeclimate.com/github/launchdeckio/shipment
-
 [david-image]: https://img.shields.io/david/launchdeckio/shipment.svg?style=flat-square
 [david-url]: https://david-dm.org/launchdeckio/shipment
 
 [david-dev-image]: https://img.shields.io/david/dev/launchdeckio/shipment.svg?style=flat-square
 [david-dev-url]: https://david-dm.org/launchdeckio/shipment#info=devDependencies
-
-[coveralls-image]: https://img.shields.io/coveralls/launchdeckio/shipment.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/launchdeckio/shipment
 
 [npm-image]: https://img.shields.io/npm/v/shipment.svg?style=flat-square
 [npm-url]: https://www.npmjs.com/package/shipment
