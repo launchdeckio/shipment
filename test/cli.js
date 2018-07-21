@@ -29,6 +29,11 @@ test('cli should output the result of the action', async t => {
     t.regex(result, /HI/);
 });
 
+test('cli should output events of type "info"', async t => {
+    const result = await capture(actions, {}, 'dispatchInfo');
+    t.regex(result, /interesting information/);
+});
+
 test('cli should not print "custom events" without the proper formatter', async t => {
     const result = await capture(actions, {}, 'customEvent');
     t.notRegex(result, /fooEvent/);
