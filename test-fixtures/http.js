@@ -1,4 +1,4 @@
-const {http} = require('../../');
+const {http} = require('../index');
 
 const actions = require('./actions');
 

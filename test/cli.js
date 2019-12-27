@@ -2,7 +2,7 @@ import streamBuffers from 'stream-buffers';
 import test from 'ava';
 
 import {cli} from '../';
-import actions from './fixtures/actions';
+import actions from '../test-fixtures/actions';
 
 const capture = async (actions, options, args) => {
 

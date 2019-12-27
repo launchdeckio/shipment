@@ -3,7 +3,7 @@ import sinon from 'sinon';
 
 import {api} from '..';
 
-import actions from './fixtures/actions';
+import actions from '../test-fixtures/actions';
 
 test('ApiWrapper', async t => {
 

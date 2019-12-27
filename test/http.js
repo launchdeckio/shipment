@@ -3,7 +3,7 @@ import request from 'supertest';
 
 import {http} from '..';
 
-import actions from './fixtures/actions';
+import actions from '../test-fixtures/actions';
 
 test('http', async t => {
 

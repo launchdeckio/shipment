@@ -1,6 +1,6 @@
 'use strict';
 
-const {info} = require('../../lib/events');
+const {info} = require('../lib/events');
 
 module.exports = {
 
