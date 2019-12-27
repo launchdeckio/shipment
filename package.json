@@ -23,20 +23,20 @@
   "author": "JM Versteeg",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.18.3",
-    "express": "^4.16.4",
-    "lodash": "^4.17.11",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "lodash": "^4.17.15",
     "morgan": "^1.9.1",
-    "serialize-error": "^3.0.0",
+    "serialize-error": "^5.0.0",
     "stream-line-wrapper": "^0.1.1",
-    "through2": "^3.0.0",
-    "yargs": "^13.1.0"
+    "through2": "^3.0.1",
+    "yargs": "^15.0.2"
   },
   "devDependencies": {
-    "ava": "^1.2.1",
-    "eslint": "^5.13.0",
-    "sinon": "^7.2.3",
+    "ava": "^2.4.0",
+    "eslint": "^6.8.0",
+    "sinon": "^8.0.1",
     "stream-buffers": "^3.0.2",
-    "supertest": "^3.4.2"
+    "supertest": "^4.0.2"
   }
 }
